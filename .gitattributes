@@ -1,9 +1,6 @@
-# Evitar que Git modifique los saltos de línea de archivos .form
 *.form binary
 
-# Mantener saltos de línea consistentes en archivos Java
 *.java text eol=lf
 
-# Archivos de configuración y texto en general
 *.md text eol=lf
 *.txt text eol=lf

@@ -18,24 +18,23 @@ import java.time.LocalDate;
 public class RegisterPassenger {
     public static Response createPassenger(String id, String firstname, String lastname, String year, String month, String day, String phoneCode, String phone, String country) {
         
-        long idLong = Long.parseLong(id), phoneLong = Long.parseLong(phone);
-        int phoneCodeInt = Integer.parseInt(phoneCode), dayInt = Integer.parseInt(day), monthInt = Integer.parseInt(month), yearInt = Integer.parseInt(year);
-        
         try {
+            
+            long idLong, phoneLong;
+            int phoneCodeInt, dayInt, monthInt, yearInt;
+            
             try {
-                if (idLong < 0) {
-                    return new Response("Id must be positive", Status.BAD_REQUEST);
-                }
+                idLong = Long.parseLong(id);
             } catch (NumberFormatException ex) {
                 return new Response("Id must be numeric", Status.BAD_REQUEST);
             }
             
-            try {
-                if (CheckDigits.digitsInNRange(idLong, 15)) {
-                    return new Response("Id must contain max. 15 digitas", Status.BAD_REQUEST);
-                }
-            } catch (NumberFormatException ex) {
-                return new Response("Id must be numeric", Status.BAD_REQUEST);
+            if (idLong < 0) {
+                return new Response("Id must be positive", Status.BAD_REQUEST);
+            }
+
+            if (CheckDigits.longerThat(idLong, 15)) {
+                return new Response("Id must contain max. 15 digits", Status.BAD_REQUEST);
             }
             
             if (firstname.equals("")) {
@@ -47,19 +46,29 @@ public class RegisterPassenger {
             }
             
             try {
-                if (dayInt < 0) {
-                    return new Response("Day must be positive", Status.BAD_REQUEST);
-                }
+                yearInt = Integer.parseInt(year);
             } catch (NumberFormatException ex) {
-                return new Response("Day must be numeric", Status.BAD_REQUEST);
+                return new Response("Year must be numeric", Status.BAD_REQUEST);
+            }
+            
+            if (yearInt < 0) {
+                return new Response("Year must be positive", Status.BAD_REQUEST);
+            }
+
+            if (CheckDigits.longerThat(idLong, 4)) {
+                return new Response("Country phone code must contain max. 3 digitas", Status.BAD_REQUEST);
             }
             
             try {
-                if (monthInt < 0) {
-                    return new Response("Id must be positive", Status.BAD_REQUEST);
-                }
+                monthInt = Integer.parseInt(month);
             } catch (NumberFormatException ex) {
-                return new Response("Id must be numeric", Status.BAD_REQUEST);
+                return new Response("Please, select a month", Status.BAD_REQUEST);
+            }
+            
+            try {
+                dayInt = Integer.parseInt(day);
+            } catch (NumberFormatException ex) {
+                return new Response("Please, Select a day", Status.BAD_REQUEST);
             }
             
             LocalDate birthDate = LocalDate.of(yearInt, monthInt, dayInt);
@@ -68,12 +77,43 @@ public class RegisterPassenger {
                 return new Response("Birthdate can not be the same as the current date or pass the current date", Status.BAD_REQUEST);
             } 
             
+            try {
+                phoneCodeInt = Integer.parseInt(phoneCode);
+            } catch (NumberFormatException ex) {
+                return new Response("Country phone code must be numeric", Status.BAD_REQUEST);
+            }
+            
+            if (phoneCodeInt < 0) {
+                return new Response("Country phone code must be positive", Status.BAD_REQUEST);
+            }
+
+            if (CheckDigits.longerThat(idLong, 3)) {
+                return new Response("Country phone code must contain max. 3 digitas", Status.BAD_REQUEST);
+            }
+            
+            try {
+                phoneLong = Long.parseLong(phone);
+            } catch (NumberFormatException ex) {
+                return new Response("Phone number must be numeric", Status.BAD_REQUEST);
+            }
+            
+            if (phoneLong < 0) {
+                return new Response("Phone number must be positive", Status.BAD_REQUEST);
+            }
+
+            if (CheckDigits.longerThat(idLong, 11)) {
+                return new Response("Phone number must contain max. 11 digitas", Status.BAD_REQUEST);
+            }
+            
+            if (country.equals("")) {
+                return new Response("Lastname must be not empty", Status.BAD_REQUEST);
+            }
+            
             PassengerStorage storage = PassengerStorage.getInstance();            
             if (!storage.addPassenger(new Passenger(idLong, firstname, lastname, birthDate, phoneCodeInt, phoneLong, country))) {
-                return new Response("A person with that id already exists", Status.BAD_REQUEST);
-            } else {
+                return new Response("A passenger with that id already exists", Status.BAD_REQUEST);
             }
-            return new Response("Person created successfully", Status.CREATED);
+            return new Response("Passenger registrated successfully", Status.CREATED);
         } catch (Exception ex) {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
         }

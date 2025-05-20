@@ -9,7 +9,7 @@ package airport.core.controllers.utils;
  * @author Sebas
  */
 public class CheckDigits {
-    public static boolean digitsInNRange(long number, int n) {
-        return String.valueOf(Math.abs(number)).length() <= n;
+    public static boolean longerThat(long number, int n) {
+        return String.valueOf(Math.abs(number)).length() > n;
     }
 }

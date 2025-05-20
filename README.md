@@ -1,8 +1,7 @@
 /*
-Airport 
+    Airport 
 
-Sebastián Carbonó y Karoll Marquéz
+    Sebastián Carbonó y Karoll Marquez
 
-NRC 2250
-
+    NRC 2250
 */

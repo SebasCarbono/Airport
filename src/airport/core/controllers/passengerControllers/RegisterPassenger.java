@@ -4,7 +4,6 @@
  */
 package airport.core.controllers.passengerControllers;
 
-import airport.core.controllers.utils.CheckDigits;
 import airport.core.models.Passenger;
 import airport.core.models.storage.PassengerStorage;
 import airport.core.controllers.utils.Response;
@@ -33,7 +32,7 @@ public class RegisterPassenger {
                 return new Response("Id must be positive", Status.BAD_REQUEST);
             }
 
-            if (CheckDigits.longerThat(idLong, 15)) {
+            if (id.length() > 15) {
                 return new Response("Id must contain max. 15 digits", Status.BAD_REQUEST);
             }
             
@@ -55,8 +54,8 @@ public class RegisterPassenger {
                 return new Response("Year must be positive", Status.BAD_REQUEST);
             }
 
-            if (CheckDigits.longerThat(idLong, 4)) {
-                return new Response("Country phone code must contain max. 3 digitas", Status.BAD_REQUEST);
+            if (year.length() > 4) {
+                return new Response("Country phone code must contain max. 4 digitas", Status.BAD_REQUEST);
             }
             
             try {
@@ -68,7 +67,7 @@ public class RegisterPassenger {
             try {
                 dayInt = Integer.parseInt(day);
             } catch (NumberFormatException ex) {
-                return new Response("Please, Select a day", Status.BAD_REQUEST);
+                return new Response("Please, select a day", Status.BAD_REQUEST);
             }
             
             LocalDate birthDate = LocalDate.of(yearInt, monthInt, dayInt);
@@ -87,7 +86,7 @@ public class RegisterPassenger {
                 return new Response("Country phone code must be positive", Status.BAD_REQUEST);
             }
 
-            if (CheckDigits.longerThat(idLong, 3)) {
+            if (phoneCode.length() > 3) {
                 return new Response("Country phone code must contain max. 3 digitas", Status.BAD_REQUEST);
             }
             
@@ -101,7 +100,7 @@ public class RegisterPassenger {
                 return new Response("Phone number must be positive", Status.BAD_REQUEST);
             }
 
-            if (CheckDigits.longerThat(idLong, 11)) {
+            if (phone.length() > 11) {
                 return new Response("Phone number must contain max. 11 digitas", Status.BAD_REQUEST);
             }
             

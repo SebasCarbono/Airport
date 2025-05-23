@@ -16,12 +16,14 @@ public class CreateAirplane {
     public static Response CreateAirplane(String id,String brand,String model,String maxCapacity,String airline){
         try{
             
+            int intMaxCapacity;
+        
             if(id.length() != 7){
                 return new Response("Id must contain min 7 charactes", Status.BAD_REQUEST);
             }
             
             if(!id.matches("^[A-Z]{2}\\d{5}$")){
-                return new Response("ID must follow format XXYYYYY (2 uppercase letters + 5 digits)", Status.BAD_REQUEST);
+                return new Response("ID must follow format XXYYYYY (2 uppercase letters + 5 numeric digits)", Status.BAD_REQUEST);
             }
             
             if(brand.equals("")){
@@ -36,11 +38,14 @@ public class CreateAirplane {
                 return new Response("Max Capacity must not be empty", Status.BAD_REQUEST);
             }
             
-            int intMaxCapacity;
             try{
                 intMaxCapacity = Integer.parseInt(maxCapacity);
             }catch(NumberFormatException ex){
                 return new Response("Max Capacity must be numeric", Status.BAD_REQUEST);
+            }
+            
+            if(intMaxCapacity < 0){
+                return new Response("Max. Capacity must be gretaer than zero", Status.BAD_REQUEST);
             }
             
             if(airline.equals("")){

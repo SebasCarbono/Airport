@@ -1464,7 +1464,7 @@ public class AirportFrame extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
             
-            this.userSelectA.addItem("" + id);
+            this.userSelectA.addItem(id);
             
             countryFieldPR.setText("");
             phoneFieldPR.setText("");

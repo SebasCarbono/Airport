@@ -16,6 +16,9 @@ import core.controllers.utils.Status;
 public class CreateLocation {
     public static Response CreateLocation(String id,String name,String city,String country,String latitude,String longitude){
 	try{
+            
+            double doubleLatitude, doubleLongitude;
+            
             if(id.length() != 3 || !id.matches("[A-Z]{3}")){
                 return new Response("Id must be 3 uppercase letters", Status.BAD_REQUEST);
             }
@@ -32,18 +35,24 @@ public class CreateLocation {
                 return new Response("Country must be not empty", Status.BAD_REQUEST);
             }
 
-            double doubleLatitude;
             try{
                 doubleLatitude = Double.parseDouble(latitude);
             }catch(NumberFormatException ex){
                 return new Response("Latitude must be numeric", Status.BAD_REQUEST);
             }
+            
+            if(doubleLatitude < -90 || doubleLatitude > 90){
+                return new Response("Latitude must be in range [-90, 90]", Status.BAD_REQUEST);
+            }
 
-            double doubleLongitude;
             try{
                 doubleLongitude = Double.parseDouble(longitude);
             }catch(NumberFormatException ex){
                 return new Response("Longitude must be numeric", Status.BAD_REQUEST);
+            }
+            
+            if(doubleLongitude < -180 || doubleLongitude > 180){
+                return new Response("Latitude must be in range [-180, 180]", Status.BAD_REQUEST);
             }
 
             LocationStorage storage = LocationStorage.getInstance();

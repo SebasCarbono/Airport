@@ -29,7 +29,7 @@ public class RegisterPassenger {
             }
             
             if (idLong < 0) {
-                return new Response("Id must be positive", Status.BAD_REQUEST);
+                return new Response("Id must be gretaer than zero", Status.BAD_REQUEST);
             }
 
             if (id.length() > 15) {
@@ -51,11 +51,11 @@ public class RegisterPassenger {
             }
             
             if (yearInt < 0) {
-                return new Response("Year must be positive", Status.BAD_REQUEST);
+                return new Response("Year must be gretaer than zero", Status.BAD_REQUEST);
             }
 
             if (year.length() > 4) {
-                return new Response("Country phone code must contain max. 4 digitas", Status.BAD_REQUEST);
+                return new Response("Year must contain four digits", Status.BAD_REQUEST);
             }
             
             try {
@@ -97,7 +97,7 @@ public class RegisterPassenger {
             }
             
             if (phoneLong < 0) {
-                return new Response("Phone number must be positive", Status.BAD_REQUEST);
+                return new Response("Phone number must be gretaer than zero", Status.BAD_REQUEST);
             }
 
             if (phone.length() > 11) {

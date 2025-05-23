@@ -5,6 +5,8 @@
 package airport.core.views;
 
 import airport.core.controllers.passengerControllers.RegisterPassenger;
+import airport.core.controllers.airplaneControllers.CreateAirplane;
+import airport.core.controllers.locationControllers.CreateLocation;
 import airport.core.controllers.utils.Response;
 import airport.core.models.Passenger;
 import airport.core.models.Plane;
@@ -1484,12 +1486,26 @@ public class AirportFrame extends javax.swing.JFrame {
         String id = idFieldAR.getText();
         String brand = brandFieldAR.getText();
         String model = modelFieldAR.getText();
-        int maxCapacity = Integer.parseInt(maxCapFieldAR.getText());
+        String maxCapacity = maxCapFieldAR.getText(); /*int*/
         String airline = airlineFieldAR.getText();
-
-        this.planes.add(new Plane(id, brand, model, maxCapacity, airline));
-
-        this.planeSelectFR.addItem(id);
+        
+        Response response = CreateAirplane.CreateAirplane(id, brand, model, maxCapacity, airline);
+        
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
+            this.planes.add((Plane) response.getObject());
+            this.planeSelectFR.addItem(id);
+            
+            idFieldAR.setText("");
+            brandFieldAR.setText("");
+            modelFieldAR.setText("");
+            maxCapFieldAR.setText("");
+            airlineFieldAR.setText("");
+        }
     }//GEN-LAST:event_createButtonARActionPerformed
 
     private void createButtonLRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createButtonLRActionPerformed
@@ -1498,14 +1514,31 @@ public class AirportFrame extends javax.swing.JFrame {
         String name = airportNameFieldLR.getText();
         String city = airportCityFieldLR.getText();
         String country = airportCountryFieldLR.getText();
-        double latitude = Double.parseDouble(airportLatitudeFieldLR.getText());
-        double longitude = Double.parseDouble(airportLongitudeFieldLR.getText());
+        String latitude = airportLatitudeFieldLR.getText();
+        String longitude = airportLongitudeFieldLR.getText();
 
-        this.locations.add(new Location(id, name, city, country, latitude, longitude));
+        Response response = CreateLocation.CreateLocation(id, name, city, country, latitude, longitude);
+        
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
 
-        this.departureLocationSelectFR.addItem(id);
-        this.arrivalLocationFR.addItem(id);
-        this.scaleLocationSelectFR.addItem(id);
+            this.locations.add((Location) response.getObject());
+
+            this.departureLocationSelectFR.addItem(id);
+            this.arrivalLocationFR.addItem(id);
+            this.scaleLocationSelectFR.addItem(id);
+
+            airportFieldLR.setText("");
+            airportNameFieldLR.setText("");
+            airportCityFieldLR.setText("");
+            airportCountryFieldLR.setText("");
+            airportLatitudeFieldLR.setText("");
+            airportLongitudeFieldLR.setText("");
+        }
     }//GEN-LAST:event_createButtonLRActionPerformed
 
     private void createButtonFRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createButtonFRActionPerformed

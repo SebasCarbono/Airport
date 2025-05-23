@@ -20,7 +20,7 @@ public class CreateAirplane {
                 return new Response("Id must contain min 7 charactes", Status.BAD_REQUEST);
             }
             
-            if(id.matches("[A-Z]{2}") || id.matches("\\d{5}")){
+            if(!id.matches("^[A-Z]{2}\\d{5}$")){
                 return new Response("ID must follow format XXYYYYY (2 uppercase letters + 5 digits)", Status.BAD_REQUEST);
             }
             
@@ -49,10 +49,10 @@ public class CreateAirplane {
             
             AirplaneStorage storage = AirplaneStorage.getInstance();
             Plane newPlane = new Plane(id, brand, model, intMaxCapacity, airline);
-             if (!storage.addAirplane(newPlane)) {
+            if (!storage.addAirplane(newPlane)) {
                 return new Response("A airplane with that id already exists", Status.BAD_REQUEST);
             }
-            return new Response("Airplane createated successfully", Status.CREATED, newPlane);
+            return new Response("Airplane created successfully", Status.CREATED, newPlane);
         }catch(Exception ex) {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
         }

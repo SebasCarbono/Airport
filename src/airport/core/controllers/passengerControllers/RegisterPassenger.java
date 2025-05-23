@@ -33,7 +33,7 @@ public class RegisterPassenger {
             }
 
             if (id.length() > 15) {
-                return new Response("Id must contain max. 15 digits", Status.BAD_REQUEST);
+                return new Response("Id must contain max 15 digits", Status.BAD_REQUEST);
             }
             
             if (firstname.equals("")) {

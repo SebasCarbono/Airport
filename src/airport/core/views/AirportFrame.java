@@ -64,6 +64,14 @@ public class AirportFrame extends javax.swing.JFrame {
                 this.userSelectA.addItem(Long.toString(passenger.getId()));
             }
         }
+        
+        Response rPlane = LoadPlaneData.LoadPlaneData();
+        if (rPlane.getStatus() < 400) {
+            ArrayList<Plane> planes = (ArrayList<Plane>) rPlane.getObject();
+            for (Plane plane : planes) {
+                this.planeSelectFR.addItem(plane.getId());
+            }
+        }
     }
 
     private void blockPanels() {

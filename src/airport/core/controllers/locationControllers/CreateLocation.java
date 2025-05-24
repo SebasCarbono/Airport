@@ -7,7 +7,7 @@ package airport.core.controllers.locationControllers;
 import airport.core.controllers.utils.Response;
 import airport.core.models.Location;
 import airport.core.models.storage.LocationStorage;
-import core.controllers.utils.Status;
+import airport.core.controllers.utils.Status;
 
 /**
  *

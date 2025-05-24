@@ -6,7 +6,7 @@ package airport.core.controllers.airplaneControllers;
 
 import airport.core.controllers.utils.Response;
 import airport.core.models.storage.JsonStorage;
-import core.controllers.utils.Status;
+import airport.core.controllers.utils.Status;
 
 /**
  *

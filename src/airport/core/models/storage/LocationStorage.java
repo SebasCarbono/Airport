@@ -35,4 +35,14 @@ public class LocationStorage {
         this.locations.add(location);
         return true;
     }
+    
+    public Location getLocation(String id) {
+        for (Location location : this.locations) {
+            if (location.getAirportId().equals(id)) {
+                return location;
+            }
+        }
+        return null;
+    }
+    
 }

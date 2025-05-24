@@ -9,7 +9,7 @@ import airport.core.models.Flight;
 import airport.core.models.Location;
 import airport.core.models.Passenger;
 import airport.core.models.Plane;
-import core.controllers.utils.Status;
+import airport.core.controllers.utils.Status;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.time.LocalDate;

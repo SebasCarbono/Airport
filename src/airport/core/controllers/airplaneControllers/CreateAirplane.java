@@ -7,7 +7,7 @@ package airport.core.controllers.airplaneControllers;
 import airport.core.controllers.utils.Response;
 import airport.core.models.Plane;
 import airport.core.models.storage.AirplaneStorage;
-import core.controllers.utils.Status;
+import airport.core.controllers.utils.Status;
 /**
  *
  * @author Karoll

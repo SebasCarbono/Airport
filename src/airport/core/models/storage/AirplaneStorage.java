@@ -43,4 +43,14 @@ public class AirplaneStorage {
         this.airplanes.add(airplane);
         return true;
     }
+    
+    public Plane getAirplane(String id) {
+        for (Plane p : this.airplanes) {
+            if (p.getId().equals(id)) {
+                return p;
+            }
+        }
+        return null;
+    }
+    
 }

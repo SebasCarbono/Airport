@@ -14,10 +14,7 @@ import java.util.ArrayList;
  */
 public class PassengerStorage {
     
-    // Instancia Singleton
     private static PassengerStorage instance;
-    
-    // Atributos del PassengerStorage
     private ArrayList<Passenger> passengers;
     
     private PassengerStorage() {
@@ -54,14 +51,4 @@ public class PassengerStorage {
         return null;
     }
     
-    public boolean delPassenger(long id) {
-        for (Passenger passenger : this.passengers) {
-            if (passenger.getId() == id) {
-                this.passengers.remove(passenger);
-                return true;
-            }
-        }
-        return false;
-    }
-        
 }

@@ -60,7 +60,7 @@ public class CreateLocation {
             if(!storage.addLocation(newLocation)){
                     return new Response("A location with that id already exists", Status.BAD_REQUEST);
             }
-            return new Response("Location created successfully", Status.CREATED, newLocation);
+            return new Response("Location created successfully", Status.CREATED);
 	}catch(Exception ex) {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
         }

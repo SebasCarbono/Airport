@@ -57,7 +57,7 @@ public class CreateAirplane {
             if (!storage.addAirplane(newPlane)) {
                 return new Response("A airplane with that id already exists", Status.BAD_REQUEST);
             }
-            return new Response("Airplane created successfully", Status.CREATED, newPlane);
+            return new Response("Airplane created successfully", Status.CREATED);
         }catch(Exception ex) {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
         }

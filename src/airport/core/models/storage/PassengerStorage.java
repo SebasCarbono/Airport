@@ -4,6 +4,7 @@
  */
 package airport.core.models.storage;
 
+import airport.core.controllers.utils.Response;
 import airport.core.models.Passenger;
 import java.util.ArrayList;
 
@@ -20,7 +21,11 @@ public class PassengerStorage {
     private ArrayList<Passenger> passengers;
     
     private PassengerStorage() {
-        this.passengers = new ArrayList<>();
+        JsonStorage jsonStorage = JsonStorage.getInstance();
+        Response rPassenger = jsonStorage.loadPassengersFromJson();
+        if(rPassenger.getStatus() < 400){
+            this.passengers = (ArrayList<Passenger>) rPassenger.getObject();
+        }else{this.passengers = new ArrayList<>();}
     }
     
     public static PassengerStorage getInstance() {

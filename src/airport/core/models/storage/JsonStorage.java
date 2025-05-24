@@ -90,7 +90,43 @@ public class JsonStorage {
         return true;
     }    
     
-    public ArrayList<Passenger> getPassengers(){
-        return this.passengers;
+    public Response loadPlanesFromJson() {
+        try (InputStream is = new FileInputStream("json/planes.json")) {
+            if (is == null) {
+                return new Response("File planes.json not found.", Status.NOT_FOUND);
+            }
+
+            JSONTokener tokener = new JSONTokener(is);
+            JSONArray jsonArray = new JSONArray(tokener);
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject obj = jsonArray.getJSONObject(i);
+
+                Plane plane = new Plane(
+                        obj.getString("id"),
+                        obj.getString("brand"),
+                        obj.getString("model"),
+                        obj.getInt("maxCapacity"),
+                        obj.getString("airline")
+                );
+                // Intentar añadirlo solo si no existe
+                this.addPlane(plane);
+            }
+            return new Response("Planes loaded successfully", Status.OK, this.planes);
+
+        } catch (Exception e) {
+            return new Response("Error reading passengers from JSON", Status.INTERNAL_SERVER_ERROR);
+        }
     }
+    
+    public boolean addPlane(Plane plane) {
+        for (Plane p : this.planes) {
+            if (p.getId().equals(plane.getId())){
+                return false;
+            }
+        }
+        this.planes.add(plane);
+        return true;
+    }    
+    
 }

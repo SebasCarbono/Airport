@@ -111,7 +111,7 @@ public class RegisterPassenger {
             PassengerStorage storage = PassengerStorage.getInstance();   
             Passenger passenger = new Passenger(idLong, firstname, lastname, birthDate, phoneCodeInt, phoneLong, country);
             if (!storage.addPassenger(passenger)) {
-                return new Response("A passenger with that id already exists", Status.BAD_REQUEST, passenger);
+                return new Response("A passenger with that id already exists", Status.BAD_REQUEST);
             }
             return new Response("Passenger registrated successfully", Status.CREATED);
         } catch (Exception ex) {

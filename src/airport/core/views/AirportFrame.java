@@ -6,6 +6,7 @@ package airport.core.views;
 
 import airport.core.controllers.passengerControllers.RegisterPassenger;
 import airport.core.controllers.airplaneControllers.CreateAirplane;
+import airport.core.controllers.airplaneControllers.LoadPlaneData;
 import airport.core.controllers.locationControllers.CreateLocation;
 import airport.core.controllers.passengerControllers.LoadPassengerData;
 import airport.core.controllers.utils.Response;
@@ -13,6 +14,9 @@ import airport.core.models.Passenger;
 import airport.core.models.Plane;
 import airport.core.models.Flight;
 import airport.core.models.Location;
+import airport.core.models.storage.AirplaneStorage;
+import airport.core.models.storage.JsonStorage;
+import airport.core.models.storage.PassengerStorage;
 import java.awt.Color;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -1472,8 +1476,7 @@ public class AirportFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
-            
-            this.passengers.add((Passenger) response.getObject());
+
             this.userSelectA.addItem("" + id);
             
             countryFieldPR.setText("");
@@ -1486,7 +1489,7 @@ public class AirportFrame extends javax.swing.JFrame {
             
             daySelectPR.setSelectedIndex(0);
             monthSelectPR.setSelectedIndex(0);
-            
+                        
         }
 
     }//GEN-LAST:event_registerButtonPRActionPerformed
@@ -1496,7 +1499,7 @@ public class AirportFrame extends javax.swing.JFrame {
         String id = idFieldAR.getText();
         String brand = brandFieldAR.getText();
         String model = modelFieldAR.getText();
-        String maxCapacity = maxCapFieldAR.getText(); /*int*/
+        String maxCapacity = maxCapFieldAR.getText();
         String airline = airlineFieldAR.getText();
         
         Response response = CreateAirplane.CreateAirplane(id, brand, model, maxCapacity, airline);
@@ -1695,14 +1698,14 @@ public class AirportFrame extends javax.swing.JFrame {
         } else if (response.getStatus() >= 400) {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
         } else {
-            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
-        
             DefaultTableModel model = (DefaultTableModel) tableSAPass.getModel();
             model.setRowCount(0);
             this.passengers = (ArrayList<Passenger>) response.getObject();
             for (Passenger passenger : this.passengers) {
                 model.addRow(new Object[]{passenger.getId(), passenger.getFullname(), passenger.getBirthDate(), passenger.calculateAge(), passenger.generateFullPhone(), passenger.getCountry(), passenger.getNumFlights()});
             }
+            
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_refreshButtonSAPassActionPerformed
 
@@ -1717,10 +1720,21 @@ public class AirportFrame extends javax.swing.JFrame {
 
     private void refreshButtonSAPlanesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonSAPlanesActionPerformed
         // TODO add your handling code here:
-        DefaultTableModel model = (DefaultTableModel) tableSAPlanes.getModel();
-        model.setRowCount(0);
-        for (Plane plane : this.planes) {
-            model.addRow(new Object[]{plane.getId(), plane.getBrand(), plane.getModel(), plane.getMaxCapacity(), plane.getAirline(), plane.getNumFlights()});
+        Response response = LoadPlaneData.LoadPlaneData();
+        
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            DefaultTableModel model = (DefaultTableModel) tableSAPlanes.getModel();
+            model.setRowCount(0);
+            this.planes = (ArrayList<Plane>) response.getObject();
+            for (Plane plane : this.planes) {
+                model.addRow(new Object[]{plane.getId(), plane.getBrand(), plane.getModel(), plane.getMaxCapacity(), plane.getAirline(), plane.getNumFlights()});
+            }
+            
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_refreshButtonSAPlanesActionPerformed
 

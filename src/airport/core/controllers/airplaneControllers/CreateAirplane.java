@@ -15,7 +15,6 @@ import core.controllers.utils.Status;
 public class CreateAirplane {
     public static Response CreateAirplane(String id,String brand,String model,String maxCapacity,String airline){
         try{
-            
             int intMaxCapacity;
         
             if(id.length() != 7){

@@ -1,5 +1,6 @@
 package airport.core.models.storage;
 
+import airport.core.controllers.utils.Response;
 import airport.core.models.Plane;
 import java.util.ArrayList;
 
@@ -17,7 +18,13 @@ public class AirplaneStorage {
     private ArrayList<Plane> airplanes;
 
     private AirplaneStorage(){
-        this.airplanes = new ArrayList<>();
+        JsonStorage jsonStorage = JsonStorage.getInstance();
+        Response rPlane = jsonStorage.loadPlanesFromJson(); 
+        if(rPlane.getStatus() < 400){
+            this.airplanes = (ArrayList<Plane>) rPlane.getObject();
+        } else {
+            this.airplanes = new ArrayList<>();
+        }
     }
     
     public static AirplaneStorage getInstance() {
@@ -29,7 +36,7 @@ public class AirplaneStorage {
     
     public boolean addAirplane(Plane airplane) {
         for (Plane a : this.airplanes) {
-            if (a.getId() == airplane.getId()){
+            if(a.getId().equals(airplane.getId())){
                 return false;
             }
         }

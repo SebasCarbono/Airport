@@ -37,10 +37,10 @@ public class LoadPlaneData {
                 ));
             }
 
-            return new Response("Pasajeros cargados correctamente", Status.OK, copy);
+            return new Response("Planes loaded successfully", Status.OK, copy);
 
         } catch (Exception e) {
-            return new Response("Error al cargar pasajeros: " + e.getMessage(), Status.INTERNAL_SERVER_ERROR);
+            return new Response("Error loading planes", Status.INTERNAL_SERVER_ERROR);
         }
     }
 }

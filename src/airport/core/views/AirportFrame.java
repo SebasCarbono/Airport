@@ -10,6 +10,7 @@ import airport.core.controllers.airplaneControllers.LoadPlaneData;
 import airport.core.controllers.flightControllers.AddToFlight;
 import airport.core.controllers.flightControllers.CreateFlight;
 import airport.core.controllers.flightControllers.DelayFlight;
+import airport.core.controllers.flightControllers.LoadFlightData;
 import airport.core.controllers.locationControllers.CreateLocation;
 import airport.core.controllers.passengerControllers.LoadPassengerData;
 import airport.core.controllers.passengerControllers.UpdatePassenger;
@@ -42,17 +43,19 @@ public class AirportFrame extends javax.swing.JFrame {
     private final LoadPassengerData loadPassengersController;
     private final CreateAirplane createAirplaneController;
     private final LoadPlaneData loadPlanesController;
+    private final LoadFlightData loadFlightsController;
     private final CreateFlight createFlightController;
     private final DelayFlight delayFlightController;
     private final AddToFlight addToFlightController;
     private final CreateLocation createLocationController;
 
-    public AirportFrame(CreatePassenger createPassengerController, UpdatePassenger updatePassengerController,LoadPassengerData loadPassengersController, CreateAirplane createAirplaneController, LoadPlaneData loadPlanesController, CreateFlight createFlightController, DelayFlight delayFlightController, AddToFlight addToFlightController, CreateLocation createLocationController) {
+    public AirportFrame(CreatePassenger createPassengerController, UpdatePassenger updatePassengerController,LoadPassengerData loadPassengersController, CreateAirplane createAirplaneController, LoadPlaneData loadPlanesController, LoadFlightData loadFlightsController, CreateFlight createFlightController, DelayFlight delayFlightController, AddToFlight addToFlightController, CreateLocation createLocationController) {
         this.createPassengerController = createPassengerController;
         this.updatePassengerController = updatePassengerController;
         this.loadPassengersController = loadPassengersController;
         this.createAirplaneController = createAirplaneController;
         this.loadPlanesController = loadPlanesController;
+        this.loadFlightsController = loadFlightsController;
         this.createFlightController = createFlightController;
         this.delayFlightController = delayFlightController;
         this.addToFlightController = addToFlightController;
@@ -88,6 +91,15 @@ public class AirportFrame extends javax.swing.JFrame {
             ArrayList<Plane> planes = (ArrayList<Plane>) rPlane.getObject();
             for (Plane plane : planes) {
                 this.planeSelectFR.addItem(plane.getId());
+            }
+        }
+        
+        Response rFlight = loadFlightsController.execute();
+        if (rPlane.getStatus() < 400) {
+            @SuppressWarnings("unchecked")
+            ArrayList<Flight> flights = (ArrayList<Flight>) rFlight.getObject();
+            for (Flight flight : flights) {
+                this.flightSelectATF.addItem(flight.getId());
             }
         }
     }
@@ -1750,13 +1762,39 @@ public class AirportFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_refreshButtonSAPassActionPerformed
 
+    @SuppressWarnings("unchecked")
     private void refreshButtonSAFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonSAFActionPerformed
         // TODO add your handling code here:
-        DefaultTableModel model = (DefaultTableModel) tableSAF.getModel();
-        model.setRowCount(0);
-        for (Flight flight : this.flights) {
-            model.addRow(new Object[]{flight.getId(), flight.getDepartureLocation().getAirportId(), flight.getArrivalLocation().getAirportId(), (flight.getScaleLocation() == null ? "-" : flight.getScaleLocation().getAirportId()), flight.getDepartureDate(), flight.calculateArrivalDate(), flight.getPlane().getId(), flight.getNumPassengers()});
+        Response response = loadFlightsController.execute();
+
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Warning " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            DefaultTableModel model = (DefaultTableModel) tableSAF.getModel();
+            model.setRowCount(0); // Limpiar tabla
+
+            this.flights = (ArrayList<Flight>) response.getObject();
+
+            for (Flight flight : this.flights) {
+                model.addRow(new Object[] {
+                    flight.getId(),
+                    flight.getDepartureLocation().getAirportId(),
+                    flight.getArrivalLocation().getAirportId(),
+                    (flight.getScaleLocation() == null ? "-" : flight.getScaleLocation().getAirportId()),
+                    flight.getDepartureDate(),
+                    flight.calculateArrivalDate(),
+                    flight.getPlane().getId(),
+                    flight.getNumPassengers()
+                });
+            }
+
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Information", JOptionPane.INFORMATION_MESSAGE);
+            System.out.println("Rows in model: " + tableSAF.getRowCount());
+
         }
+
     }//GEN-LAST:event_refreshButtonSAFActionPerformed
 
     @SuppressWarnings("unchecked")

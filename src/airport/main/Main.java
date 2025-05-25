@@ -9,6 +9,7 @@ import airport.core.controllers.airplaneControllers.LoadPlaneData;
 import airport.core.controllers.flightControllers.AddToFlight;
 import airport.core.controllers.flightControllers.CreateFlight;
 import airport.core.controllers.flightControllers.DelayFlight;
+import airport.core.controllers.flightControllers.LoadFlightData;
 import airport.core.controllers.locationControllers.CreateLocation;
 import airport.core.controllers.passengerControllers.CreatePassenger;
 import airport.core.controllers.passengerControllers.LoadPassengerData;
@@ -17,6 +18,7 @@ import airport.core.models.Flight;
 import airport.core.models.Location;
 import airport.core.models.Passenger;
 import airport.core.models.Plane;
+import airport.core.models.jsonLoaders.JsonFlightLoader;
 import airport.core.models.jsonLoaders.JsonPassengerLoader;
 import airport.core.models.jsonLoaders.JsonPlaneLoader;
 import airport.core.models.storageManagement.Add;
@@ -64,16 +66,20 @@ public class Main {
         
         
         //---------------------------------flights-----------------------------------------
-        Add<Flight> flightWriter = FlightStorage.getInstance();
         GetItem<Plane> airplaneReader = AirplaneStorage.getInstance(planeLoader);
         GetItem<Location> locationReader = LocationStorage.getInstance();
+        LoadData<Flight> flightLoader = new JsonFlightLoader("json/flights.json", airplaneReader, locationReader);
+        Add<Flight> flightWriter = FlightStorage.getInstance(flightLoader);
         CreateFlight createFlightController = new CreateFlight(flightWriter, airplaneReader, locationReader);
         
-        GetItem<Flight> flightReader = FlightStorage.getInstance();
+        GetItem<Flight> flightReader = FlightStorage.getInstance(flightLoader);
         DelayFlight delayFlightController = new DelayFlight(flightReader);
         
         GetItem<Passenger> passengerReader = PassengerStorage.getInstance(passengerLoader);
         AddToFlight addToFlightController = new AddToFlight(flightReader, passengerReader);
+        
+        FlightStorage flightStorage = FlightStorage.getInstance(flightLoader);
+        LoadFlightData loadFlightsController = new LoadFlightData(flightStorage);
         
         
         //---------------------------------locations-----------------------------------------
@@ -83,7 +89,7 @@ public class Main {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new AirportFrame(createPassengerController, updatePassengerController, loadPassengersController, createAirplaneController, loadPlanesController, createFlightController, delayFlightController, addToFlightController, createLocationController).setVisible(true);
+                new AirportFrame(createPassengerController, updatePassengerController, loadPassengersController, createAirplaneController, loadPlanesController, loadFlightsController, createFlightController, delayFlightController, addToFlightController, createLocationController).setVisible(true);
             }
         });
     }

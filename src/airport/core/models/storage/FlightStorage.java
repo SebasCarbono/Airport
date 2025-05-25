@@ -7,6 +7,7 @@ package airport.core.models.storage;
 import airport.core.models.Flight;
 import airport.core.models.storageManagement.Add;
 import airport.core.models.storageManagement.GetItem;
+import airport.core.models.storageManagement.LoadData;
 import java.util.ArrayList;
 
 /**
@@ -18,17 +19,13 @@ public class FlightStorage implements Add<Flight>, GetItem<Flight>{
     private static FlightStorage instance;
     private ArrayList<Flight> flights;
     
-//    private FlightStorage() {
-//        JsonStorage jsonStorage = JsonStorage.getInstance();
-//        Response rFlight = jsonStorage.loadFlightsFromJson();
-//        if(rFlight.getStatus() < 400){
-//            this.flights = (ArrayList<Flight>) rFlight.getObject();
-//        }else{this.flights = new ArrayList<>();}
-//    }
-    
-    public static FlightStorage getInstance() {
+    public FlightStorage(LoadData<Flight> loader) {
+        this.flights = new ArrayList<>(loader.load());
+    }
+
+    public static FlightStorage getInstance(LoadData<Flight> loader) {
         if (instance == null) {
-            instance = new FlightStorage();
+            instance = new FlightStorage(loader);
         }
         return instance;
     }

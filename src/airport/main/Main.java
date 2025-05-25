@@ -6,6 +6,7 @@ package airport.main;
 
 import airport.core.controllers.airplaneControllers.CreateAirplane;
 import airport.core.controllers.airplaneControllers.LoadPlaneData;
+import airport.core.controllers.flightControllers.AddToFlight;
 import airport.core.controllers.flightControllers.CreateFlight;
 import airport.core.controllers.flightControllers.DelayFlight;
 import airport.core.controllers.locationControllers.CreateLocation;
@@ -67,8 +68,12 @@ public class Main {
         GetItem<Plane> airplaneReader = AirplaneStorage.getInstance(planeLoader);
         GetItem<Location> locationReader = LocationStorage.getInstance();
         CreateFlight createFlightController = new CreateFlight(flightWriter, airplaneReader, locationReader);
+        
         GetItem<Flight> flightReader = FlightStorage.getInstance();
         DelayFlight delayFlightController = new DelayFlight(flightReader);
+        
+        GetItem<Passenger> passengerReader = PassengerStorage.getInstance(passengerLoader);
+        AddToFlight addToFlightController = new AddToFlight(flightReader, passengerReader);
         
         
         //---------------------------------locations-----------------------------------------
@@ -78,7 +83,7 @@ public class Main {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new AirportFrame(createPassengerController, updatePassengerController, loadPassengersController, createAirplaneController, loadPlanesController, createFlightController, delayFlightController, createLocationController).setVisible(true);
+                new AirportFrame(createPassengerController, updatePassengerController, loadPassengersController, createAirplaneController, loadPlanesController, createFlightController, delayFlightController, addToFlightController, createLocationController).setVisible(true);
             }
         });
     }

@@ -7,6 +7,7 @@ package airport.core.views;
 import airport.core.controllers.passengerControllers.CreatePassenger;
 import airport.core.controllers.airplaneControllers.CreateAirplane;
 import airport.core.controllers.airplaneControllers.LoadPlaneData;
+import airport.core.controllers.flightControllers.AddToFlight;
 import airport.core.controllers.flightControllers.CreateFlight;
 import airport.core.controllers.flightControllers.DelayFlight;
 import airport.core.controllers.locationControllers.CreateLocation;
@@ -43,9 +44,10 @@ public class AirportFrame extends javax.swing.JFrame {
     private final LoadPlaneData loadPlanesController;
     private final CreateFlight createFlightController;
     private final DelayFlight delayFlightController;
+    private final AddToFlight addToFlightController;
     private final CreateLocation createLocationController;
 
-    public AirportFrame(CreatePassenger createPassengerController, UpdatePassenger updatePassengerController,LoadPassengerData loadPassengersController, CreateAirplane createAirplaneController, LoadPlaneData loadPlanesController, CreateFlight createFlightController, DelayFlight delayFlightController, CreateLocation createLocationController) {
+    public AirportFrame(CreatePassenger createPassengerController, UpdatePassenger updatePassengerController,LoadPassengerData loadPassengersController, CreateAirplane createAirplaneController, LoadPlaneData loadPlanesController, CreateFlight createFlightController, DelayFlight delayFlightController, AddToFlight addToFlightController, CreateLocation createLocationController) {
         this.createPassengerController = createPassengerController;
         this.updatePassengerController = updatePassengerController;
         this.loadPassengersController = loadPassengersController;
@@ -53,6 +55,7 @@ public class AirportFrame extends javax.swing.JFrame {
         this.loadPlanesController = loadPlanesController;
         this.createFlightController = createFlightController;
         this.delayFlightController = delayFlightController;
+        this.addToFlightController = addToFlightController;
         this.createLocationController = createLocationController;
         initComponents();
 
@@ -1659,26 +1662,22 @@ public class AirportFrame extends javax.swing.JFrame {
 
     private void addButtonATFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonATFActionPerformed
         // TODO add your handling code here:
-        long passengerId = Long.parseLong(idFieldATF.getText());
+        String passengerId = idFieldATF.getText();
         String flightId = flightSelectATF.getItemAt(flightSelectATF.getSelectedIndex());
-
-        Passenger passenger = null;
-        Flight flight = null;
-
-        for (Passenger p : this.passengers) {
-            if (p.getId() == passengerId) {
-                passenger = p;
-            }
+        
+        Response response = addToFlightController.execute(passengerId, flightId);
+        
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
+            
+            idFieldATF.setText("");
+            
+            flightSelectATF.setSelectedIndex(0);
         }
-
-        for (Flight f : this.flights) {
-            if (flightId.equals(f.getId())) {
-                flight = f;
-            }
-        }
-
-        passenger.addFlight(flight);
-        flight.addPassenger(passenger);
     }//GEN-LAST:event_addButtonATFActionPerformed
 
     private void delayButtonDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delayButtonDFActionPerformed
@@ -1705,7 +1704,7 @@ public class AirportFrame extends javax.swing.JFrame {
     private void refreshButtonSMFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonSMFActionPerformed
         // TODO add your handling code here:
         long passengerId = Long.parseLong(userSelectA.getItemAt(userSelectA.getSelectedIndex()));
-
+        
         Passenger passenger = null;
         for (Passenger p : this.passengers) {
             if (p.getId() == passengerId) {

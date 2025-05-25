@@ -6,14 +6,21 @@ package airport.core.controllers.airplaneControllers;
  */
 import airport.core.controllers.utils.Response;
 import airport.core.models.Plane;
-import airport.core.models.storage.AirplaneStorage;
 import airport.core.controllers.utils.Status;
+import airport.core.models.storageManagement.Add;
 /**
  *
  * @author Karoll
  */
 public class CreateAirplane {
-    public static Response CreateAirplane(String id,String brand,String model,String maxCapacity,String airline){
+    
+    private final Add<Plane> airplaneStorage;
+
+    public CreateAirplane(Add<Plane> airplaneStorage) {
+        this.airplaneStorage = airplaneStorage;
+    }
+    
+    public Response execute(String id,String brand,String model,String maxCapacity,String airline){
         try{
             int intMaxCapacity;
         
@@ -51,9 +58,8 @@ public class CreateAirplane {
                 return new Response("Airline must not be empty", Status.BAD_REQUEST);
             }
             
-            AirplaneStorage storage = AirplaneStorage.getInstance();
             Plane newPlane = new Plane(id, brand, model, intMaxCapacity, airline);
-            if (!storage.addAirplane(newPlane)) {
+            if (!airplaneStorage.addItem(newPlane)) {
                 return new Response("A airplane with that id already exists", Status.BAD_REQUEST);
             }
             return new Response("Airplane created successfully", Status.CREATED);

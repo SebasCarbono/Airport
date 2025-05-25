@@ -6,13 +6,15 @@ package airport.core.models.storage;
 
 import airport.core.controllers.utils.Response;
 import airport.core.models.Passenger;
+import airport.core.models.storageManagement.Add;
+import airport.core.models.storageManagement.GetItem;
 import java.util.ArrayList;
 
 /**
  *
  * @author Sebas
  */
-public class PassengerStorage {
+public class PassengerStorage implements Add<Passenger>, GetItem<Passenger> {
     
     private static PassengerStorage instance;
     private ArrayList<Passenger> passengers;
@@ -35,7 +37,8 @@ public class PassengerStorage {
         return instance;
     }
     
-    public boolean addPassenger(Passenger passenger) {
+    @Override
+    public boolean addItem(Passenger passenger) {
         for (Passenger p : this.passengers) {
             if (p.getId() == passenger.getId()) {
                 return false;
@@ -45,17 +48,24 @@ public class PassengerStorage {
         return true;
     }
     
-    public Passenger getPassenger(long id) {
-        for (Passenger passenger : this.passengers) {
-            if (passenger.getId() == id) {
-                return passenger;
+    @Override
+    public Passenger getItem(String id) {
+        try{
+            long idLong = Long.parseLong(id);
+            for (Passenger passenger : this.passengers) {
+                if (passenger.getId() == idLong) {
+                    return passenger;
+                }
             }
+        }catch(NumberFormatException ex) {
+            
         }
         return null;
     }
-    
-    public ArrayList<Passenger> getPassengers(){
-        return this.passengers;
+
+    @Override
+    public ArrayList<Passenger> getAllItems() {
+        return new ArrayList<>(this.passengers);
     }
     
 }

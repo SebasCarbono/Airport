@@ -9,9 +9,8 @@ import airport.core.controllers.utils.Status;
 import airport.core.models.Flight;
 import airport.core.models.Location;
 import airport.core.models.Plane;
-import airport.core.models.storage.AirplaneStorage;
-import airport.core.models.storage.FlightStorage;
-import airport.core.models.storage.LocationStorage;
+import airport.core.models.storageManagement.Add;
+import airport.core.models.storageManagement.GetItem;
 import java.time.LocalDateTime;
 
 /**
@@ -19,7 +18,18 @@ import java.time.LocalDateTime;
  * @author Sebas
  */
 public class CreateFlight {
-    public static Response createFlight(String id, String planeId, String departureLocationId, String arrivalLocationId, 
+    
+    private final Add<Flight> flightWriter;
+    private final GetItem<Plane> airplaneReader;
+    private final GetItem<Location> locationReader;
+
+    public CreateFlight(Add<Flight> flightWriter, GetItem<Plane> airplaneReader, GetItem<Location> locationReader) {
+        this.flightWriter = flightWriter;
+        this.airplaneReader = airplaneReader;
+        this.locationReader = locationReader;
+    }
+    
+    public Response execute(String id, String planeId, String departureLocationId, String arrivalLocationId, 
             String scaleLocationId, String year, String month, String day, String hour, String minute, 
             String hoursDurationsArrival, String minutesDurationsArrival, String hoursDurationsScale, String minutesDurationsScale){
         try{
@@ -54,19 +64,19 @@ public class CreateFlight {
             }
             
             try {
-                plane = AirplaneStorage.getInstance().getAirplane(planeId);
+                plane = airplaneReader.getItem(planeId);
             } catch (NumberFormatException ex) {
                 return new Response("Please, select a plane ID", Status.BAD_REQUEST);
             }
             
             try{
-                departureLocation = LocationStorage.getInstance().getLocation(departureLocationId);
+                departureLocation = locationReader.getItem(departureLocationId);
             }catch (NumberFormatException ex) {
                 return new Response("Please, select a departure location ID", Status.BAD_REQUEST);
             }
             
             try{
-                arrivalLocation = LocationStorage.getInstance().getLocation(arrivalLocationId);
+                arrivalLocation = locationReader.getItem(arrivalLocationId);
             }catch (NumberFormatException ex) {
                 return new Response("Please, select an arrival location ID", Status.BAD_REQUEST);
             }
@@ -76,7 +86,7 @@ public class CreateFlight {
             }
             
             try{
-                scaleLocation = LocationStorage.getInstance().getLocation(scaleLocationId);
+                scaleLocation = locationReader.getItem(scaleLocationId);
                 scaleId = true;
                 
                 if(departureLocation.equals(scaleLocation)){
@@ -154,13 +164,12 @@ public class CreateFlight {
                 }
             }
 
-            FlightStorage storage = FlightStorage.getInstance();
             if(!scaleId){
                 newFlight = new Flight(id, plane, departureLocation, arrivalLocation, departureDate, hoursDurationArrivalInt, minutesDurationArrivalInt);
             }else{
                 newFlight = new Flight(id, plane, departureLocation, scaleLocation, arrivalLocation, departureDate, hoursDurationArrivalInt, minutesDurationArrivalInt, hoursDurationScaleInt, minutesDurationScaleInt);
             }
-            if (!storage.addFlight(newFlight)) {
+            if (!flightWriter.addItem(newFlight)) {
                 return new Response("A flight with that id already exists", Status.BAD_REQUEST);
             }
             if(!scaleId){

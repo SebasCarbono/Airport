@@ -5,13 +5,15 @@
 package airport.core.models.storage;
 
 import airport.core.models.Flight;
+import airport.core.models.storageManagement.Add;
+import airport.core.models.storageManagement.GetItem;
 import java.util.ArrayList;
 
 /**
  *
  * @author Sebas
  */
-public class FlightStorage {
+public class FlightStorage implements Add<Flight>, GetItem<Flight>{
     
     private static FlightStorage instance;
     private ArrayList<Flight> flights;
@@ -31,7 +33,8 @@ public class FlightStorage {
         return instance;
     }
     
-    public boolean addFlight(Flight flight) {
+    @Override
+    public boolean addItem(Flight flight) {
         for (Flight p : this.flights) {
             if (p.getId().equals(flight.getId())) {
                 return false;
@@ -41,7 +44,8 @@ public class FlightStorage {
         return true;
     }
     
-    public Flight getFlight(String id) {
+    @Override
+    public Flight getItem(String id) {
         for (Flight f : this.flights) {
             if (f.getId().equals(id)) {
                 return f;
@@ -49,5 +53,10 @@ public class FlightStorage {
         }
         return null;
     }
-        
+
+    @Override
+    public ArrayList<Flight> getAllItems() {
+        return new ArrayList<>(this.flights);
+    }
+
 }

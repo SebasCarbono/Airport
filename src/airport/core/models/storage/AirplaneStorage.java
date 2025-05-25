@@ -1,7 +1,7 @@
 package airport.core.models.storage;
 
 import airport.core.controllers.utils.Response;
-import airport.core.models.Plane;
+import airport.core.models.storageManagement.Add;
 import java.util.ArrayList;
 
 /*
@@ -9,11 +9,12 @@ import java.util.ArrayList;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 import airport.core.models.Plane;
+import airport.core.models.storageManagement.GetItem;
 /**
  *
  * @author Karoll
  */
-public class AirplaneStorage {
+public class AirplaneStorage implements Add<Plane>, GetItem<Plane>{
     private static AirplaneStorage instance;
     private ArrayList<Plane> airplanes;
 
@@ -35,7 +36,8 @@ public class AirplaneStorage {
         return instance;
     }
     
-    public boolean addAirplane(Plane airplane) {
+    @Override
+    public boolean addItem(Plane airplane) {
         for (Plane a : this.airplanes) {
             if(a.getId().equals(airplane.getId())){
                 return false;
@@ -44,8 +46,9 @@ public class AirplaneStorage {
         this.airplanes.add(airplane);
         return true;
     }
-    
-    public Plane getAirplane(String id) {
+
+    @Override
+    public Plane getItem(String id) {
         for (Plane p : this.airplanes) {
             if (p.getId().equals(id)) {
                 return p;
@@ -53,8 +56,9 @@ public class AirplaneStorage {
         }
         return null;
     }
-    
-    public ArrayList<Plane> getPlanes(){
-        return this.airplanes;
+
+    @Override
+    public ArrayList<Plane> getAllItems() {
+        return new ArrayList<>(this.airplanes);
     }
 }

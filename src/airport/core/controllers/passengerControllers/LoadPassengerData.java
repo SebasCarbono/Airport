@@ -17,7 +17,7 @@ public class LoadPassengerData {
     public static Response LoadPassengerData(){
         try{
             PassengerStorage storage = PassengerStorage.getInstance();
-            return new Response("Passengers loaded successfully", Status.OK, storage.getPassengers());
+            return new Response("Passengers loaded successfully", Status.OK, storage.getAllItems());
         } catch (Exception ex) {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
         }

@@ -5,13 +5,15 @@
 package airport.core.models.storage;
 
 import airport.core.models.Location;
+import airport.core.models.storageManagement.Add;
+import airport.core.models.storageManagement.GetItem;
 import java.util.ArrayList;
 
 /**
  *
  * @author Karoll
  */
-public class LocationStorage {
+public class LocationStorage implements Add<Location>, GetItem<Location>{
     private static LocationStorage instance;
     private ArrayList<Location> locations;
 
@@ -26,7 +28,8 @@ public class LocationStorage {
         return instance;
     }
     
-    public boolean addLocation(Location location) {
+    @Override
+    public boolean addItem(Location location) {
         for (Location l : this.locations) {
             if (l.getAirportId() == location.getAirportId()){
                 return false;
@@ -35,14 +38,20 @@ public class LocationStorage {
         this.locations.add(location);
         return true;
     }
-    
-    public Location getLocation(String id) {
+
+    @Override
+    public Location getItem(String id) {
         for (Location location : this.locations) {
             if (location.getAirportId().equals(id)) {
                 return location;
             }
         }
         return null;
+    }
+
+    @Override
+    public ArrayList<Location> getAllItems() {
+        return new ArrayList<>(this.locations);
     }
     
 }

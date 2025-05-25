@@ -6,15 +6,22 @@ package airport.core.controllers.locationControllers;
 
 import airport.core.controllers.utils.Response;
 import airport.core.models.Location;
-import airport.core.models.storage.LocationStorage;
 import airport.core.controllers.utils.Status;
+import airport.core.models.storageManagement.Add;
 
 /**
  *
  * @author Karoll
  */
 public class CreateLocation {
-    public static Response CreateLocation(String id,String name,String city,String country,String latitude,String longitude){
+    
+    private final Add<Location> locationStorage;
+
+    public CreateLocation(Add<Location> locationStorage) {
+        this.locationStorage = locationStorage;
+    }
+    
+    public Response execute(String id,String name,String city,String country,String latitude,String longitude){
 	try{
             
             double doubleLatitude, doubleLongitude;
@@ -55,9 +62,8 @@ public class CreateLocation {
                 return new Response("Latitude must be in range [-180, 180]", Status.BAD_REQUEST);
             }
 
-            LocationStorage storage = LocationStorage.getInstance();
             Location newLocation = new Location(id, name, city, country, doubleLatitude, doubleLongitude);
-            if(!storage.addLocation(newLocation)){
+            if(!locationStorage.addItem(newLocation)){
                     return new Response("A location with that id already exists", Status.BAD_REQUEST);
             }
             return new Response("Location created successfully", Status.CREATED);

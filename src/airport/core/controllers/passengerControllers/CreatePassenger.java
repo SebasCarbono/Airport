@@ -5,17 +5,24 @@
 package airport.core.controllers.passengerControllers;
 
 import airport.core.models.Passenger;
-import airport.core.models.storage.PassengerStorage;
 import airport.core.controllers.utils.Response;
 import airport.core.controllers.utils.Status;
+import airport.core.models.storageManagement.Add;
 import java.time.LocalDate;
 
 /**
  *
  * @author Sebas
  */
-public class RegisterPassenger {
-    public static Response createPassenger(String id, String firstname, String lastname, String year, String month, String day, String phoneCode, String phone, String country) {
+public class CreatePassenger {
+    
+    private final Add<Passenger> passengerStorage;
+
+    public CreatePassenger(Add<Passenger> passengerStorage) {
+        this.passengerStorage = passengerStorage;
+    }
+    
+    public Response execute(String id, String firstname, String lastname, String year, String month, String day, String phoneCode, String phone, String country) {
         
         try {
             
@@ -54,7 +61,7 @@ public class RegisterPassenger {
                 return new Response("Year must be gretaer than zero", Status.BAD_REQUEST);
             }
 
-            if (year.length() > 4) {
+            if (year.length() != 4) {
                 return new Response("Year must contain four digits", Status.BAD_REQUEST);
             }
             
@@ -108,9 +115,8 @@ public class RegisterPassenger {
                 return new Response("Lastname must be not empty", Status.BAD_REQUEST);
             }
             
-            PassengerStorage storage = PassengerStorage.getInstance();   
             Passenger passenger = new Passenger(idLong, firstname, lastname, birthDate, phoneCodeInt, phoneLong, country);
-            if (!storage.addPassenger(passenger)) {
+            if (!passengerStorage.addItem(passenger)) {
                 return new Response("A passenger with that id already exists", Status.BAD_REQUEST);
             }
             return new Response("Passenger registrated successfully", Status.CREATED);

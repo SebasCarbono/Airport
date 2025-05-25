@@ -15,8 +15,8 @@ import airport.core.models.storage.AirplaneStorage;
 public class LoadPlaneData {
     public static Response LoadPlaneData(){
         try{
-            AirplaneStorage storage = AirplaneStorage.getInstance();
-            return new Response("Planes loaded successfully", Status.OK, storage.getPlanes());
+            AirplaneStorage airplaneStorage = AirplaneStorage.getInstance();
+            return new Response("Planes loaded successfully", Status.OK, airplaneStorage.getAllItems());
         } catch (Exception ex) {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
         }

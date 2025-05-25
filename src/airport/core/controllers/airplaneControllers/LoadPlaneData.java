@@ -5,8 +5,8 @@
 package airport.core.controllers.airplaneControllers;
 
 import airport.core.controllers.utils.Response;
-import airport.core.models.storage.JsonStorage;
 import airport.core.controllers.utils.Status;
+import airport.core.models.storage.AirplaneStorage;
 
 /**
  *
@@ -15,8 +15,8 @@ import airport.core.controllers.utils.Status;
 public class LoadPlaneData {
     public static Response LoadPlaneData(){
         try{
-            JsonStorage storage = JsonStorage.getInstance();
-            return storage.loadPlanesFromJson();
+            AirplaneStorage storage = AirplaneStorage.getInstance();
+            return new Response("Planes loaded successfully", Status.OK, storage.getPlanes());
         } catch (Exception ex) {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
         }

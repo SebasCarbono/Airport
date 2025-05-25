@@ -21,7 +21,8 @@ public class AirplaneStorage {
         JsonStorage jsonStorage = JsonStorage.getInstance();
         Response rPlane = jsonStorage.loadPlanesFromJson(); 
         if(rPlane.getStatus() < 400){
-            this.airplanes = (ArrayList<Plane>) rPlane.getObject();
+            ArrayList<Plane> loadedPassengers = (ArrayList<Plane>) rPlane.getObject();
+            this.airplanes = new ArrayList<>(loadedPassengers);
         } else {
             this.airplanes = new ArrayList<>();
         }
@@ -53,4 +54,7 @@ public class AirplaneStorage {
         return null;
     }
     
+    public ArrayList<Plane> getPlanes(){
+        return this.airplanes;
+    }
 }

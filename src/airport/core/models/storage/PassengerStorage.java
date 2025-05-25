@@ -20,9 +20,12 @@ public class PassengerStorage {
     private PassengerStorage() {
         JsonStorage jsonStorage = JsonStorage.getInstance();
         Response rPassenger = jsonStorage.loadPassengersFromJson();
-        if(rPassenger.getStatus() < 400){
-            this.passengers = (ArrayList<Passenger>) rPassenger.getObject();
-        }else{this.passengers = new ArrayList<>();}
+        if (rPassenger.getStatus() < 400) {
+            ArrayList<Passenger> loadedPassengers = (ArrayList<Passenger>) rPassenger.getObject();
+            this.passengers = new ArrayList<>(loadedPassengers);
+        } else {
+            this.passengers = new ArrayList<>();
+        }
     }
     
     public static PassengerStorage getInstance() {
@@ -49,6 +52,10 @@ public class PassengerStorage {
             }
         }
         return null;
+    }
+    
+    public ArrayList<Passenger> getPassengers(){
+        return this.passengers;
     }
     
 }

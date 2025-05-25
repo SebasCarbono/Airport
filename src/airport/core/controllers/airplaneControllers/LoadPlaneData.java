@@ -6,19 +6,41 @@ package airport.core.controllers.airplaneControllers;
 
 import airport.core.controllers.utils.Response;
 import airport.core.controllers.utils.Status;
-import airport.core.models.storage.AirplaneStorage;
+import airport.core.models.Plane;
+import airport.core.models.storageManagement.GetItem;
+import java.util.ArrayList;
 
 /**
  *
  * @author Karoll
  */
 public class LoadPlaneData {
-    public static Response LoadPlaneData(){
-        try{
-            AirplaneStorage airplaneStorage = AirplaneStorage.getInstance();
-            return new Response("Planes loaded successfully", Status.OK, airplaneStorage.getAllItems());
-        } catch (Exception ex) {
-            return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
+    
+    private final GetItem<Plane> planeGetter;
+
+    public LoadPlaneData(GetItem planeGetter) {
+        this.planeGetter = planeGetter;
+    }
+    
+    public Response execute(){
+        try {
+            ArrayList<Plane> original = planeGetter.getAllItems();
+            ArrayList<Plane> copy = new ArrayList<>();
+
+            for (Plane p : original) {
+                copy.add(new Plane(
+                    p.getId(),
+                    p.getBrand(),
+                    p.getModel(),
+                    p.getMaxCapacity(),
+                    p.getAirline()
+                ));
+            }
+
+            return new Response("Pasajeros cargados correctamente", Status.OK, copy);
+
+        } catch (Exception e) {
+            return new Response("Error al cargar pasajeros: " + e.getMessage(), Status.INTERNAL_SERVER_ERROR);
         }
     }
 }

@@ -17,12 +17,7 @@ import airport.core.models.Passenger;
 import airport.core.models.Plane;
 import airport.core.models.Flight;
 import airport.core.models.Location;
-import airport.core.models.storage.AirplaneStorage;
-import airport.core.models.storage.JsonStorage;
-import airport.core.models.storage.PassengerStorage;
 import java.awt.Color;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -43,15 +38,19 @@ public class AirportFrame extends javax.swing.JFrame {
     private ArrayList<Flight> flights;
     private final CreatePassenger createPassengerController;
     private final UpdatePassenger updatePassengerController;
+    private final LoadPassengerData loadPassengersController;
     private final CreateAirplane createAirplaneController;
+    private final LoadPlaneData loadPlanesController;
     private final CreateFlight createFlightController;
     private final DelayFlight delayFlightController;
     private final CreateLocation createLocationController;
 
-    public AirportFrame(CreatePassenger createPassengerController, UpdatePassenger updatePassengerController, CreateAirplane createAirplaneController, CreateFlight createFlightController, DelayFlight delayFlightController, CreateLocation createLocationController) {
+    public AirportFrame(CreatePassenger createPassengerController, UpdatePassenger updatePassengerController,LoadPassengerData loadPassengersController, CreateAirplane createAirplaneController, LoadPlaneData loadPlanesController, CreateFlight createFlightController, DelayFlight delayFlightController, CreateLocation createLocationController) {
         this.createPassengerController = createPassengerController;
         this.updatePassengerController = updatePassengerController;
+        this.loadPassengersController = loadPassengersController;
         this.createAirplaneController = createAirplaneController;
+        this.loadPlanesController = loadPlanesController;
         this.createFlightController = createFlightController;
         this.delayFlightController = delayFlightController;
         this.createLocationController = createLocationController;
@@ -71,16 +70,18 @@ public class AirportFrame extends javax.swing.JFrame {
         this.generateMinutes();
         this.blockPanels();
 
-        Response rPassenger = LoadPassengerData.LoadPassengerData();
+        Response rPassenger = loadPassengersController.execute();
         if (rPassenger.getStatus() < 400) {
+            @SuppressWarnings("unchecked")
             ArrayList<Passenger> passengers = (ArrayList<Passenger>) rPassenger.getObject();
             for (Passenger passenger : passengers) {
                 this.userSelectA.addItem(Long.toString(passenger.getId()));
             }
         }
         
-        Response rPlane = LoadPlaneData.LoadPlaneData();
+        Response rPlane = loadPlanesController.execute();
         if (rPlane.getStatus() < 400) {
+            @SuppressWarnings("unchecked")
             ArrayList<Plane> planes = (ArrayList<Plane>) rPlane.getObject();
             for (Plane plane : planes) {
                 this.planeSelectFR.addItem(plane.getId());
@@ -1720,23 +1721,33 @@ public class AirportFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_refreshButtonSMFActionPerformed
 
+    @SuppressWarnings("unchecked")
     private void refreshButtonSAPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonSAPassActionPerformed
         // TODO add your handling code here:
-        Response response = LoadPassengerData.LoadPassengerData();
-        
+        Response response = loadPassengersController.execute();
+    
         if (response.getStatus() >= 500) {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
         } else if (response.getStatus() >= 400) {
-            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Advertencia " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
         } else {
             DefaultTableModel model = (DefaultTableModel) tableSAPass.getModel();
             model.setRowCount(0);
+
             this.passengers = (ArrayList<Passenger>) response.getObject();
             for (Passenger passenger : this.passengers) {
-                model.addRow(new Object[]{passenger.getId(), passenger.getFullname(), passenger.getBirthDate(), passenger.calculateAge(), passenger.generateFullPhone(), passenger.getCountry(), passenger.getNumFlights()});
+                model.addRow(new Object[]{
+                    passenger.getId(),
+                    passenger.getFullname(),
+                    passenger.getBirthDate(),
+                    passenger.calculateAge(),
+                    passenger.generateFullPhone(),
+                    passenger.getCountry(),
+                    passenger.getNumFlights()
+                });
             }
-            
-            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
+
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Información", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_refreshButtonSAPassActionPerformed
 
@@ -1749,9 +1760,10 @@ public class AirportFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_refreshButtonSAFActionPerformed
 
+    @SuppressWarnings("unchecked")
     private void refreshButtonSAPlanesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonSAPlanesActionPerformed
         // TODO add your handling code here:
-        Response response = LoadPlaneData.LoadPlaneData();
+        Response response = loadPlanesController.execute();
         
         if (response.getStatus() >= 500) {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);

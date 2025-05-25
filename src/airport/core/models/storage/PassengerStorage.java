@@ -4,10 +4,10 @@
  */
 package airport.core.models.storage;
 
-import airport.core.controllers.utils.Response;
 import airport.core.models.Passenger;
 import airport.core.models.storageManagement.Add;
 import airport.core.models.storageManagement.GetItem;
+import airport.core.models.storageManagement.LoadData;
 import java.util.ArrayList;
 
 /**
@@ -19,20 +19,13 @@ public class PassengerStorage implements Add<Passenger>, GetItem<Passenger> {
     private static PassengerStorage instance;
     private ArrayList<Passenger> passengers;
     
-    private PassengerStorage() {
-        JsonStorage jsonStorage = JsonStorage.getInstance();
-        Response rPassenger = jsonStorage.loadPassengersFromJson();
-        if (rPassenger.getStatus() < 400) {
-            ArrayList<Passenger> loadedPassengers = (ArrayList<Passenger>) rPassenger.getObject();
-            this.passengers = new ArrayList<>(loadedPassengers);
-        } else {
-            this.passengers = new ArrayList<>();
-        }
+    public PassengerStorage(LoadData<Passenger> loader) {
+        this.passengers = new ArrayList<>(loader.load());
     }
     
-    public static PassengerStorage getInstance() {
+    public static PassengerStorage getInstance(LoadData<Passenger> loader) {
         if (instance == null) {
-            instance = new PassengerStorage();
+            instance = new PassengerStorage(loader);
         }
         return instance;
     }

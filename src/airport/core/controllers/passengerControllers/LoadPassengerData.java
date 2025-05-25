@@ -6,7 +6,9 @@ package airport.core.controllers.passengerControllers;
 
 import airport.core.controllers.utils.Response;
 import airport.core.controllers.utils.Status;
-import airport.core.models.storage.PassengerStorage;
+import airport.core.models.Passenger;
+import airport.core.models.storageManagement.GetItem;
+import java.util.ArrayList;
 
 /**
  *
@@ -14,12 +16,33 @@ import airport.core.models.storage.PassengerStorage;
  */
 public class LoadPassengerData {
     
-    public static Response LoadPassengerData(){
-        try{
-            PassengerStorage storage = PassengerStorage.getInstance();
-            return new Response("Passengers loaded successfully", Status.OK, storage.getAllItems());
-        } catch (Exception ex) {
-            return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
+    private final GetItem<Passenger> passengerGetter;
+
+    public LoadPassengerData(GetItem<Passenger> passengerGetter) {
+        this.passengerGetter = passengerGetter;
+    }
+
+    public Response execute() {
+        try {
+            ArrayList<Passenger> original = passengerGetter.getAllItems();
+            ArrayList<Passenger> copy = new ArrayList<>();
+
+            for (Passenger p : original) {
+                copy.add(new Passenger(
+                    p.getId(),
+                    p.getFirstname(),
+                    p.getLastname(),
+                    p.getBirthDate(),
+                    p.getCountryPhoneCode(),
+                    p.getPhone(),
+                    p.getCountry()
+                ));
+            }
+
+            return new Response("Pasajeros cargados correctamente", Status.OK, copy);
+
+        } catch (Exception e) {
+            return new Response("Error al cargar pasajeros: " + e.getMessage(), Status.INTERNAL_SERVER_ERROR);
         }
     }
 }

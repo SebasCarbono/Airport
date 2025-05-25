@@ -46,7 +46,7 @@ public class CreateFlight {
             }
             
             if(!id.matches("^[A-Z]{3}\\d{3}$")){
-                return new Response("ID must follow format X X X Y Y Y (3 uppercase letters and 3 numeric digits)", Status.BAD_REQUEST);
+                return new Response("ID must follow format XXXYYY (3 uppercase letters and 3 numeric digits)", Status.BAD_REQUEST);
             }
             
             try {

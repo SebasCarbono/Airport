@@ -1490,7 +1490,6 @@ public class AirportFrame extends javax.swing.JFrame {
         if (userButtonA.isSelected()) {
             userButtonA.setSelected(false);
             userSelectA.setSelectedIndex(0);
-
         }
         for (int i = 1; i < mainTabbedPane.getTabCount(); i++) {
                 mainTabbedPane.setEnabledAt(i, true);

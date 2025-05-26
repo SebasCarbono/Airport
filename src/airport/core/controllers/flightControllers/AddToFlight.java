@@ -49,7 +49,7 @@ public class AddToFlight {
             
             flight = flightReader.getItem(flightId);
             if (flight == null) {
-                return new Response("Passenger not found", Status.NOT_FOUND);
+                return new Response("Please, select a flight", Status.NOT_FOUND);
             }
             
             flight.addPassenger(passenger);

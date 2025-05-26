@@ -11,6 +11,7 @@ import airport.core.controllers.flightControllers.CreateFlight;
 import airport.core.controllers.flightControllers.DelayFlight;
 import airport.core.controllers.flightControllers.LoadFlightData;
 import airport.core.controllers.locationControllers.CreateLocation;
+import airport.core.controllers.locationControllers.LoadLocationData;
 import airport.core.controllers.passengerControllers.CreatePassenger;
 import airport.core.controllers.passengerControllers.LoadPassengerData;
 import airport.core.controllers.passengerControllers.UpdatePassenger;
@@ -19,6 +20,7 @@ import airport.core.models.Location;
 import airport.core.models.Passenger;
 import airport.core.models.Plane;
 import airport.core.models.jsonLoaders.JsonFlightLoader;
+import airport.core.models.jsonLoaders.JsonLocationLoader;
 import airport.core.models.jsonLoaders.JsonPassengerLoader;
 import airport.core.models.jsonLoaders.JsonPlaneLoader;
 import airport.core.models.storageManagement.Add;
@@ -67,7 +69,8 @@ public class Main {
         
         //---------------------------------flights-----------------------------------------
         GetItem<Plane> airplaneReader = AirplaneStorage.getInstance(planeLoader);
-        GetItem<Location> locationReader = LocationStorage.getInstance();
+        LoadData<Location> locationLoader = new JsonLocationLoader("json/locations.json");
+        GetItem<Location> locationReader = LocationStorage.getInstance(locationLoader);
         LoadData<Flight> flightLoader = new JsonFlightLoader("json/flights.json", airplaneReader, locationReader);
         Add<Flight> flightWriter = FlightStorage.getInstance(flightLoader);
         CreateFlight createFlightController = new CreateFlight(flightWriter, airplaneReader, locationReader);
@@ -83,13 +86,16 @@ public class Main {
         
         
         //---------------------------------locations-----------------------------------------
-        Add<Location> locationStorage = LocationStorage.getInstance();
-        CreateLocation createLocationController = new CreateLocation(locationStorage);
+        Add<Location> locationWriter = LocationStorage.getInstance(locationLoader);
+        CreateLocation createLocationController = new CreateLocation(locationWriter);
+        
+        LocationStorage locationStorage = LocationStorage.getInstance(locationLoader);
+        LoadLocationData loadLocationsController = new LoadLocationData(locationStorage);
         
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new AirportFrame(createPassengerController, updatePassengerController, loadPassengersController, createAirplaneController, loadPlanesController, loadFlightsController, createFlightController, delayFlightController, addToFlightController, createLocationController).setVisible(true);
+                new AirportFrame(createPassengerController, updatePassengerController, loadPassengersController, createAirplaneController, loadPlanesController, loadFlightsController, createFlightController, delayFlightController, addToFlightController, loadLocationsController, createLocationController).setVisible(true);
             }
         });
     }

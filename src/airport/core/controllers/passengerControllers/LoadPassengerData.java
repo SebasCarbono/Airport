@@ -39,7 +39,7 @@ public class LoadPassengerData {
                 ));
             }
 
-            return new Response("Passengersloaded successfully", Status.OK, copy);
+            return new Response("Passengers loaded successfully", Status.OK, copy);
 
         } catch (Exception e) {
             return new Response("Error loading passengers", Status.INTERNAL_SERVER_ERROR);

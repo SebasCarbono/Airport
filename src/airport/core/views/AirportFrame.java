@@ -12,6 +12,7 @@ import airport.core.controllers.flightControllers.CreateFlight;
 import airport.core.controllers.flightControllers.DelayFlight;
 import airport.core.controllers.flightControllers.LoadFlightData;
 import airport.core.controllers.locationControllers.CreateLocation;
+import airport.core.controllers.locationControllers.LoadLocationData;
 import airport.core.controllers.passengerControllers.LoadPassengerData;
 import airport.core.controllers.passengerControllers.UpdatePassenger;
 import airport.core.controllers.utils.Response;
@@ -48,8 +49,9 @@ public class AirportFrame extends javax.swing.JFrame {
     private final DelayFlight delayFlightController;
     private final AddToFlight addToFlightController;
     private final CreateLocation createLocationController;
+    private final LoadLocationData loadLocationsController;
 
-    public AirportFrame(CreatePassenger createPassengerController, UpdatePassenger updatePassengerController,LoadPassengerData loadPassengersController, CreateAirplane createAirplaneController, LoadPlaneData loadPlanesController, LoadFlightData loadFlightsController, CreateFlight createFlightController, DelayFlight delayFlightController, AddToFlight addToFlightController, CreateLocation createLocationController) {
+    public AirportFrame(CreatePassenger createPassengerController, UpdatePassenger updatePassengerController,LoadPassengerData loadPassengersController, CreateAirplane createAirplaneController, LoadPlaneData loadPlanesController, LoadFlightData loadFlightsController, CreateFlight createFlightController, DelayFlight delayFlightController, AddToFlight addToFlightController, LoadLocationData loadLocationsController, CreateLocation createLocationController) {
         this.createPassengerController = createPassengerController;
         this.updatePassengerController = updatePassengerController;
         this.loadPassengersController = loadPassengersController;
@@ -59,6 +61,7 @@ public class AirportFrame extends javax.swing.JFrame {
         this.createFlightController = createFlightController;
         this.delayFlightController = delayFlightController;
         this.addToFlightController = addToFlightController;
+        this.loadLocationsController = loadLocationsController;
         this.createLocationController = createLocationController;
         initComponents();
 
@@ -99,7 +102,21 @@ public class AirportFrame extends javax.swing.JFrame {
             @SuppressWarnings("unchecked")
             ArrayList<Flight> flights = (ArrayList<Flight>) rFlight.getObject();
             for (Flight flight : flights) {
-                this.flightSelectATF.addItem(flight.getId());
+                String id = flight.getId();
+                this.flightSelectATF.addItem(id);
+                this.idSelectDF.addItem(id);
+            }
+        }
+        
+        Response rLocation = loadLocationsController.execute();
+        if (rLocation.getStatus() < 400) {
+            @SuppressWarnings("unchecked")
+            ArrayList<Location> locations = (ArrayList<Location>) rLocation.getObject();
+            for (Location location : locations) {
+                String id = location.getAirportId();
+                this.departureLocationSelectFR.addItem(id);
+                this.arrivalLocationFR.addItem(id);
+                this.scaleLocationSelectFR.addItem(id);
             }
         }
     }
@@ -1771,13 +1788,13 @@ public class AirportFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
         } else if (response.getStatus() >= 400) {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Warning " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
-        } else {
+        } else{
             DefaultTableModel model = (DefaultTableModel) tableSAF.getModel();
             model.setRowCount(0); // Limpiar tabla
 
             this.flights = (ArrayList<Flight>) response.getObject();
 
-            for (Flight flight : this.flights) {
+            for (Flight flight : this.flights) {// Debug individual
                 model.addRow(new Object[] {
                     flight.getId(),
                     flight.getDepartureLocation().getAirportId(),
@@ -1791,10 +1808,7 @@ public class AirportFrame extends javax.swing.JFrame {
             }
 
             JOptionPane.showMessageDialog(null, response.getMessage(), "Information", JOptionPane.INFORMATION_MESSAGE);
-            System.out.println("Rows in model: " + tableSAF.getRowCount());
-
         }
-
     }//GEN-LAST:event_refreshButtonSAFActionPerformed
 
     @SuppressWarnings("unchecked")
@@ -1820,10 +1834,22 @@ public class AirportFrame extends javax.swing.JFrame {
 
     private void refreshButtonSALActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonSALActionPerformed
         // TODO add your handling code here:
-        DefaultTableModel model = (DefaultTableModel) tableSAL.getModel();
-        model.setRowCount(0);
-        for (Location location : this.locations) {
-            model.addRow(new Object[]{location.getAirportId(), location.getAirportName(), location.getAirportCity(), location.getAirportCountry()});
+        
+        Response response = loadLocationsController.execute();
+        
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            DefaultTableModel model = (DefaultTableModel) tableSAL.getModel();
+            model.setRowCount(0);
+            this.locations = (ArrayList<Location>) response.getObject();
+            for (Location location : this.locations) {
+                model.addRow(new Object[]{location.getAirportId(), location.getAirportName(), location.getAirportCity(), location.getAirportCountry()});
+            }
+            
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_refreshButtonSALActionPerformed
 

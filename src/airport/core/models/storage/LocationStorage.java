@@ -7,6 +7,7 @@ package airport.core.models.storage;
 import airport.core.models.Location;
 import airport.core.models.storageManagement.Add;
 import airport.core.models.storageManagement.GetItem;
+import airport.core.models.storageManagement.LoadData;
 import java.util.ArrayList;
 
 /**
@@ -17,13 +18,13 @@ public class LocationStorage implements Add<Location>, GetItem<Location>{
     private static LocationStorage instance;
     private ArrayList<Location> locations;
 
-    private LocationStorage(){
-        this.locations = new ArrayList<>();
+    private LocationStorage(LoadData<Location> loader){
+        this.locations = new ArrayList<>(loader.load());
     }
     
-    public static LocationStorage getInstance() {
+    public static LocationStorage getInstance(LoadData<Location> loader) {
         if (instance == null) {
-            instance = new LocationStorage();
+            instance = new LocationStorage(loader);
         }
         return instance;
     }

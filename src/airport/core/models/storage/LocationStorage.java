@@ -50,7 +50,7 @@ public class LocationStorage implements Add<Location>, GetItem<Location>{
                 }
             }
             return null;
-        }catch(NumberFormatException ex) {
+        }catch(Exception ex) {
             return null;
         }
     }

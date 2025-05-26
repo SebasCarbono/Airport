@@ -51,7 +51,7 @@ public class AirplaneStorage implements Add<Plane>, GetItem<Plane>{
                 }
             }
             return null;
-        }catch(NumberFormatException ex){
+        }catch(Exception ex){
             return null;
         }
     }

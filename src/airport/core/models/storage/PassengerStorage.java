@@ -50,7 +50,7 @@ public class PassengerStorage implements Add<Passenger>, GetItem<Passenger> {
                     return passenger;
                 }
             }
-        }catch(NumberFormatException ex) {
+        }catch(Exception ex) {
             return null;
         }
         return null;

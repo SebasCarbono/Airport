@@ -63,42 +63,41 @@ public class CreateFlight {
                 return new Response("Departure year must contain four digits", Status.BAD_REQUEST);
             }
             
-            try {
-                plane = airplaneReader.getItem(planeId);
-            } catch (NumberFormatException ex) {
-                return new Response("Please, select a plane ID", Status.BAD_REQUEST);
+            plane = airplaneReader.getItem(planeId);
+            if(plane == null){
+                return new Response("Please, select a plane", Status.BAD_REQUEST);
             }
             
-            try{
-                departureLocation = locationReader.getItem(departureLocationId);
-            }catch (NumberFormatException ex) {
-                return new Response("Please, select a departure location ID", Status.BAD_REQUEST);
+            departureLocation = locationReader.getItem(departureLocationId);
+            if(departureLocation == null){
+                return new Response("Please, select a departure location", Status.BAD_REQUEST);
             }
             
-            try{
-                arrivalLocation = locationReader.getItem(arrivalLocationId);
-            }catch (NumberFormatException ex) {
-                return new Response("Please, select an arrival location ID", Status.BAD_REQUEST);
+            arrivalLocation = locationReader.getItem(arrivalLocationId);
+            if(arrivalLocation == null){
+                return new Response("Please, select an arrival location", Status.BAD_REQUEST);
             }
             
             if(departureLocation.equals(arrivalLocation)){
                 return new Response("Departure and arrival locations can not be the same", Status.BAD_REQUEST);
             }
             
-            try{
-                scaleLocation = locationReader.getItem(scaleLocationId);
+            scaleLocation = locationReader.getItem(scaleLocationId);
+            if(scaleLocation == null){
+                hoursDurationsScale = "0";
+                minutesDurationsScale = "0";
+            }else{
                 scaleId = true;
-                
+            }
+           
+            if(scaleId){
                 if(departureLocation.equals(scaleLocation)){
                     return new Response("Departure and scale locations can not be the same", Status.BAD_REQUEST);
                 }
-                
+
                 if(arrivalLocation.equals(scaleLocation)){
                     return new Response("Arrival and scale locations can not be the same", Status.BAD_REQUEST);
                 }
-            }catch (NumberFormatException ex) {
-                hoursDurationsScale = "0";
-                minutesDurationsScale = "0";
             }
             
             try {

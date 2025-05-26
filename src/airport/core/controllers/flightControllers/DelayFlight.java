@@ -25,14 +25,10 @@ public class DelayFlight {
             Flight flight = null;
             int hourInt, minuteInt;
 
-            try{
-                flight = flightReader.getItem(flightId);
+            flight = flightReader.getItem(flightId);
 
-                if (flight == null) {
-                    return new Response("Flight not found", Status.BAD_REQUEST);
-                }
-            } catch (NumberFormatException ex) {
-                return new Response("Please, select a flight ID", Status.BAD_REQUEST);
+            if (flight == null) {
+                return new Response("Please, select a flight", Status.BAD_REQUEST);
             }
 
             try {

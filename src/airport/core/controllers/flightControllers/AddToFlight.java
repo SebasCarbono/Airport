@@ -47,10 +47,9 @@ public class AddToFlight {
                 return new Response("Passenger not found", Status.NOT_FOUND);
             }
             
-            try{
-                flight = flightReader.getItem(flightId);
-            } catch (NumberFormatException ex) {
-                return new Response("Please, select a flight ID", Status.BAD_REQUEST);
+            flight = flightReader.getItem(flightId);
+            if (flight == null) {
+                return new Response("Passenger not found", Status.NOT_FOUND);
             }
             
             flight.addPassenger(passenger);

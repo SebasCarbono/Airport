@@ -1832,6 +1832,7 @@ public class AirportFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_refreshButtonSAPlanesActionPerformed
 
+    @SuppressWarnings("unchecked")
     private void refreshButtonSALActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonSALActionPerformed
         // TODO add your handling code here:
         

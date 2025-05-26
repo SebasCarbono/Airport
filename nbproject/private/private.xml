@@ -5,10 +5,9 @@
         <group>
             <file>file:/C:/Users/Karoll/Documents/Airport/src/airport/core/views/AirportFrame.java</file>
             <file>file:/C:/Users/Karoll/Documents/Airport/src/airport/main/Main.java</file>
-            <file>file:/C:/Users/Karoll/Documents/Airport/src/airport/core/models/storage/FlightStorage.java</file>
-            <file>file:/C:/Users/Karoll/Documents/Airport/src/airport/core/models/storage/PassengerStorage.java</file>
             <file>file:/C:/Users/Karoll/Documents/Airport/src/airport/core/controllers/flightControllers/LoadFlightData.java</file>
-            <file>file:/C:/Users/Karoll/Documents/Airport/src/airport/core/controllers/passengerControllers/LoadPassengerData.java</file>
+            <file>file:/C:/Users/Karoll/Documents/Airport/src/airport/core/models/storage/FlightStorage.java</file>
+            <file>file:/C:/Users/Karoll/Documents/Airport/src/airport/core/models/storage/LocationStorage.java</file>
             <file>file:/C:/Users/Karoll/Documents/Airport/src/airport/core/models/jsonLoaders/JsonFlightLoader.java</file>
         </group>
     </open-files>

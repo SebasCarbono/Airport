@@ -25,7 +25,7 @@ public class LoadFlightData {
     
     public Response execute() {
         try {
-            ArrayList<Flight> original = flightGetter.getAllItems();
+            ArrayList<Flight> original = flightGetter.getOrderedItems();
             ArrayList<Flight> copy = new ArrayList<>();
 
             for (Flight f : original) {

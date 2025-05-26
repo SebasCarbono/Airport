@@ -24,10 +24,10 @@ public class LoadPassengerData {
 
     public Response execute() {
         try {
-            ArrayList<Passenger> original = passengerGetter.getAllItems();
+            ArrayList<Passenger> ordered = passengerGetter.getOrderedItems();
             ArrayList<Passenger> copy = new ArrayList<>();
 
-            for (Passenger p : original) {
+            for (Passenger p : ordered) {
                 copy.add(new Passenger(
                     p.getId(),
                     p.getFirstname(),

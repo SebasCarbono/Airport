@@ -51,7 +51,7 @@ public class PassengerStorage implements Add<Passenger>, GetItem<Passenger> {
                 }
             }
         }catch(NumberFormatException ex) {
-            
+            return null;
         }
         return null;
     }
@@ -61,4 +61,10 @@ public class PassengerStorage implements Add<Passenger>, GetItem<Passenger> {
         return new ArrayList<>(this.passengers);
     }
     
+    @Override
+    public ArrayList<Passenger> getOrderedItems() {
+        ArrayList<Passenger> orderedPassengers = new ArrayList<>(this.passengers);
+        orderedPassengers.sort((p1, p2) -> Long.compare(p1.getId(), p2.getId()));
+        return orderedPassengers;
+    }
 }

@@ -9,6 +9,7 @@ import airport.core.models.storageManagement.Add;
 import airport.core.models.storageManagement.GetItem;
 import airport.core.models.storageManagement.LoadData;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  *
@@ -42,17 +43,28 @@ public class LocationStorage implements Add<Location>, GetItem<Location>{
 
     @Override
     public Location getItem(String id) {
-        for (Location location : this.locations) {
-            if (location.getAirportId().equals(id)) {
-                return location;
+        try{
+            for (Location location : this.locations) {
+                if (location.getAirportId().equals(id)) {
+                    return location;
+                }
             }
+            return null;
+        }catch(NumberFormatException ex) {
+            return null;
         }
-        return null;
     }
 
     @Override
     public ArrayList<Location> getAllItems() {
         return new ArrayList<>(this.locations);
+    }
+
+    @Override
+    public ArrayList<Location> getOrderedItems() {
+        ArrayList<Location> orderedLocations = new ArrayList<>(this.locations);
+        orderedLocations.sort(Comparator.comparing(Location::getAirportId));
+        return orderedLocations;
     }
     
 }

@@ -56,7 +56,7 @@ public class AddToFlight {
             flight.addPassenger(passenger);
             passenger.addFlight(flight);
             
-            return new Response("Passenger " + passengerId +  "added successfully to flight " + flightId, Status.OK);
+            return new Response("Passenger " + passengerId +  " added successfully to flight " + flightId, Status.OK);
         }catch (Exception ex){
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
         }

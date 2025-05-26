@@ -23,7 +23,7 @@ public class LoadLocationData {
 
     public Response execute() {
         try {
-            ArrayList<Location> original = locationGetter.getAllItems();
+            ArrayList<Location> original = locationGetter.getOrderedItems();
             ArrayList<Location> copy = new ArrayList<>();
 
             for (Location p : original) {

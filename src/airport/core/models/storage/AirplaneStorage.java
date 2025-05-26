@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import airport.core.models.Plane;
 import airport.core.models.storageManagement.GetItem;
 import airport.core.models.storageManagement.LoadData;
+import java.util.Comparator;
 /**
  *
  * @author Karoll
@@ -43,16 +44,27 @@ public class AirplaneStorage implements Add<Plane>, GetItem<Plane>{
 
     @Override
     public Plane getItem(String id) {
-        for (Plane p : this.airplanes) {
-            if (p.getId().equals(id)) {
-                return p;
+        try{
+            for (Plane p : this.airplanes) {
+                if (p.getId().equals(id)) {
+                    return p;
+                }
             }
+            return null;
+        }catch(NumberFormatException ex){
+            return null;
         }
-        return null;
     }
 
     @Override
     public ArrayList<Plane> getAllItems() {
         return new ArrayList<>(this.airplanes);
+    }
+
+    @Override
+    public ArrayList<Plane> getOrderedItems() {
+        ArrayList<Plane> orderedPlanes = new ArrayList<>(this.airplanes);
+        orderedPlanes.sort(Comparator.comparing(Plane::getId));
+        return orderedPlanes;    
     }
 }

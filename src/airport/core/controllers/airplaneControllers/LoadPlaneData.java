@@ -24,7 +24,7 @@ public class LoadPlaneData {
     
     public Response execute(){
         try {
-            ArrayList<Plane> original = planeGetter.getAllItems();
+            ArrayList<Plane> original = planeGetter.getOrderedItems();
             ArrayList<Plane> copy = new ArrayList<>();
 
             for (Plane p : original) {

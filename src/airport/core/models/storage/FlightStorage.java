@@ -9,6 +9,7 @@ import airport.core.models.storageManagement.Add;
 import airport.core.models.storageManagement.GetItem;
 import airport.core.models.storageManagement.LoadData;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  *
@@ -43,12 +44,16 @@ public class FlightStorage implements Add<Flight>, GetItem<Flight>{
     
     @Override
     public Flight getItem(String id) {
-        for (Flight f : this.flights) {
-            if (f.getId().equals(id)) {
-                return f;
+        try{
+            for (Flight f : this.flights) {
+                if (f.getId().equals(id)) {
+                    return f;
+                }
             }
+            return null;
+        }catch(NumberFormatException ex){
+            return null;
         }
-        return null;
     }
 
     @Override
@@ -56,4 +61,10 @@ public class FlightStorage implements Add<Flight>, GetItem<Flight>{
         return new ArrayList<>(this.flights);
     }
 
+    @Override
+    public ArrayList<Flight> getOrderedItems() {
+        ArrayList<Flight> orderedFlights = new ArrayList<>(this.flights);
+        orderedFlights.sort(Comparator.comparing(Flight::getDepartureDate));
+        return orderedFlights;
+    }
 }

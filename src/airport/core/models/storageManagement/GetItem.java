@@ -13,4 +13,5 @@ import java.util.ArrayList;
 public interface GetItem<T> {
     T getItem(String id);
     ArrayList<T> getAllItems();
+    ArrayList<T> getOrderedItems();
 }

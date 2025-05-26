@@ -1655,6 +1655,7 @@ public class AirportFrame extends javax.swing.JFrame {
             arrivalMinuteSelectFR.setSelectedIndex(0);
             scaleHourSelectFR.setSelectedIndex(0);
             scaleMinuteSelectFR.setSelectedIndex(0);
+            planeSelectFR.setSelectedIndex(0);
         }
         
     }//GEN-LAST:event_createButtonFRActionPerformed
@@ -1744,6 +1745,8 @@ public class AirportFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
         } else if (response.getStatus() >= 400) {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Warning " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+            DefaultTableModel model = (DefaultTableModel) tableSMF.getModel();
+            model.setRowCount(0);
         } else {
             DefaultTableModel model = (DefaultTableModel) tableSMF.getModel();
             model.setRowCount(0); // Limpiar tabla
@@ -1753,20 +1756,14 @@ public class AirportFrame extends javax.swing.JFrame {
             for (Flight flight : this.flights) {
                 model.addRow(new Object[] {
                     flight.getId(),
-                    flight.getDepartureLocation().getAirportId(),
-                    flight.getArrivalLocation().getAirportId(),
-                    (flight.getScaleLocation() == null ? "-" : flight.getScaleLocation().getAirportId()),
                     flight.getDepartureDate(),
-                    flight.calculateArrivalDate(),
-                    flight.getPlane().getId(),
-                    flight.getNumPassengers()
+                    flight.calculateArrivalDate()
                 });
             }
 
             JOptionPane.showMessageDialog(null, response.getMessage(), "Information", JOptionPane.INFORMATION_MESSAGE);
 
         }
-
     }//GEN-LAST:event_refreshButtonSMFActionPerformed
 
     @SuppressWarnings("unchecked")

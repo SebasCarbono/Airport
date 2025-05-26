@@ -10,6 +10,7 @@ import airport.core.models.Flight;
 import airport.core.models.Passenger;
 import airport.core.models.storageManagement.GetItem;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  *
@@ -47,12 +48,14 @@ public class LoadFlightsByPassenger {
             }
             
             passengerFlights = passenger.getFlights();
+            ArrayList<Flight> orderedFlights = new ArrayList<>(passengerFlights);
+            orderedFlights.sort(Comparator.comparing(Flight::getDepartureDate));
             
             if (passengerFlights.isEmpty()){
                 return new Response("The passenger has no flights", Status.NOT_FOUND);
             }
             
-            return new Response("Flights for passenger loaded", Status.OK, passengerFlights);
+            return new Response("Flights for passenger loaded", Status.OK, orderedFlights);
         } catch (Exception ex) {
             return new Response("Error loading passenger flights", Status.INTERNAL_SERVER_ERROR);
         }

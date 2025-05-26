@@ -11,6 +11,7 @@ import airport.core.controllers.flightControllers.AddToFlight;
 import airport.core.controllers.flightControllers.CreateFlight;
 import airport.core.controllers.flightControllers.DelayFlight;
 import airport.core.controllers.flightControllers.LoadFlightData;
+import airport.core.controllers.flightControllers.LoadFlightsByPassenger;
 import airport.core.controllers.locationControllers.CreateLocation;
 import airport.core.controllers.passengerControllers.LoadPassengerData;
 import airport.core.controllers.passengerControllers.UpdatePassenger;
@@ -44,18 +45,20 @@ public class AirportFrame extends javax.swing.JFrame {
     private final CreateAirplane createAirplaneController;
     private final LoadPlaneData loadPlanesController;
     private final LoadFlightData loadFlightsController;
+    private final LoadFlightsByPassenger loadFlightsByPassenger;
     private final CreateFlight createFlightController;
     private final DelayFlight delayFlightController;
     private final AddToFlight addToFlightController;
     private final CreateLocation createLocationController;
 
-    public AirportFrame(CreatePassenger createPassengerController, UpdatePassenger updatePassengerController,LoadPassengerData loadPassengersController, CreateAirplane createAirplaneController, LoadPlaneData loadPlanesController, LoadFlightData loadFlightsController, CreateFlight createFlightController, DelayFlight delayFlightController, AddToFlight addToFlightController, CreateLocation createLocationController) {
+    public AirportFrame(CreatePassenger createPassengerController, UpdatePassenger updatePassengerController,LoadPassengerData loadPassengersController, CreateAirplane createAirplaneController, LoadPlaneData loadPlanesController, LoadFlightData loadFlightsController, LoadFlightsByPassenger loadFlightsByPassenger, CreateFlight createFlightController, DelayFlight delayFlightController, AddToFlight addToFlightController, CreateLocation createLocationController) {
         this.createPassengerController = createPassengerController;
         this.updatePassengerController = updatePassengerController;
         this.loadPassengersController = loadPassengersController;
         this.createAirplaneController = createAirplaneController;
         this.loadPlanesController = loadPlanesController;
         this.loadFlightsController = loadFlightsController;
+        this.loadFlightsByPassenger = loadFlightsByPassenger;
         this.createFlightController = createFlightController;
         this.delayFlightController = delayFlightController;
         this.addToFlightController = addToFlightController;
@@ -1095,13 +1098,14 @@ public class AirportFrame extends javax.swing.JFrame {
         showMyFlightsPanelLayout.setHorizontalGroup(
             showMyFlightsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(showMyFlightsPanelLayout.createSequentialGroup()
-                .addGap(269, 269, 269)
-                .addComponent(scrollPanelSMF, javax.swing.GroupLayout.PREFERRED_SIZE, 590, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(showMyFlightsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(showMyFlightsPanelLayout.createSequentialGroup()
+                        .addGap(269, 269, 269)
+                        .addComponent(scrollPanelSMF, javax.swing.GroupLayout.PREFERRED_SIZE, 590, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(showMyFlightsPanelLayout.createSequentialGroup()
+                        .addGap(521, 521, 521)
+                        .addComponent(refreshButtonSMF)))
                 .addContainerGap(322, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, showMyFlightsPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(refreshButtonSMF)
-                .addGap(527, 527, 527))
         );
         showMyFlightsPanelLayout.setVerticalGroup(
             showMyFlightsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1715,21 +1719,37 @@ public class AirportFrame extends javax.swing.JFrame {
 
     private void refreshButtonSMFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonSMFActionPerformed
         // TODO add your handling code here:
-        long passengerId = Long.parseLong(userSelectA.getItemAt(userSelectA.getSelectedIndex()));
+        String passengerId = userSelectA.getItemAt(userSelectA.getSelectedIndex());
         
-        Passenger passenger = null;
-        for (Passenger p : this.passengers) {
-            if (p.getId() == passengerId) {
-                passenger = p;
+        Response response = loadFlightsByPassenger.execute(passengerId);
+
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Warning " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            DefaultTableModel model = (DefaultTableModel) tableSMF.getModel();
+            model.setRowCount(0); // Limpiar tabla
+
+            this.flights = (ArrayList<Flight>) response.getObject();
+
+            for (Flight flight : this.flights) {
+                model.addRow(new Object[] {
+                    flight.getId(),
+                    flight.getDepartureLocation().getAirportId(),
+                    flight.getArrivalLocation().getAirportId(),
+                    (flight.getScaleLocation() == null ? "-" : flight.getScaleLocation().getAirportId()),
+                    flight.getDepartureDate(),
+                    flight.calculateArrivalDate(),
+                    flight.getPlane().getId(),
+                    flight.getNumPassengers()
+                });
             }
+
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Information", JOptionPane.INFORMATION_MESSAGE);
+
         }
 
-        ArrayList<Flight> flights = passenger.getFlights();
-        DefaultTableModel model = (DefaultTableModel) tableSMF.getModel();
-        model.setRowCount(0);
-        for (Flight flight : flights) {
-            model.addRow(new Object[]{flight.getId(), flight.getDepartureDate(), flight.calculateArrivalDate()});
-        }
     }//GEN-LAST:event_refreshButtonSMFActionPerformed
 
     @SuppressWarnings("unchecked")

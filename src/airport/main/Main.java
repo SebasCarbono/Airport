@@ -10,6 +10,7 @@ import airport.core.controllers.flightControllers.AddToFlight;
 import airport.core.controllers.flightControllers.CreateFlight;
 import airport.core.controllers.flightControllers.DelayFlight;
 import airport.core.controllers.flightControllers.LoadFlightData;
+import airport.core.controllers.flightControllers.LoadFlightsByPassenger;
 import airport.core.controllers.locationControllers.CreateLocation;
 import airport.core.controllers.passengerControllers.CreatePassenger;
 import airport.core.controllers.passengerControllers.LoadPassengerData;
@@ -69,17 +70,16 @@ public class Main {
         GetItem<Plane> airplaneReader = AirplaneStorage.getInstance(planeLoader);
         GetItem<Location> locationReader = LocationStorage.getInstance();
         LoadData<Flight> flightLoader = new JsonFlightLoader("json/flights.json", airplaneReader, locationReader);
-        Add<Flight> flightWriter = FlightStorage.getInstance(flightLoader);
-        CreateFlight createFlightController = new CreateFlight(flightWriter, airplaneReader, locationReader);
-        
         GetItem<Flight> flightReader = FlightStorage.getInstance(flightLoader);
-        DelayFlight delayFlightController = new DelayFlight(flightReader);
-        
         GetItem<Passenger> passengerReader = PassengerStorage.getInstance(passengerLoader);
-        AddToFlight addToFlightController = new AddToFlight(flightReader, passengerReader);
+        Add<Flight> flightWriter = FlightStorage.getInstance(flightLoader);
         
+        CreateFlight createFlightController = new CreateFlight(flightWriter, airplaneReader, locationReader);
+        DelayFlight delayFlightController = new DelayFlight(flightReader);
+        AddToFlight addToFlightController = new AddToFlight(flightReader, passengerReader);
         FlightStorage flightStorage = FlightStorage.getInstance(flightLoader);
         LoadFlightData loadFlightsController = new LoadFlightData(flightStorage);
+        LoadFlightsByPassenger loadFlightsByPassenger = new LoadFlightsByPassenger(passengerReader);
         
         
         //---------------------------------locations-----------------------------------------
@@ -89,7 +89,7 @@ public class Main {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new AirportFrame(createPassengerController, updatePassengerController, loadPassengersController, createAirplaneController, loadPlanesController, loadFlightsController, createFlightController, delayFlightController, addToFlightController, createLocationController).setVisible(true);
+                new AirportFrame(createPassengerController, updatePassengerController, loadPassengersController, createAirplaneController, loadPlanesController, loadFlightsController, loadFlightsByPassenger, createFlightController, delayFlightController, addToFlightController, createLocationController).setVisible(true);
             }
         });
     }

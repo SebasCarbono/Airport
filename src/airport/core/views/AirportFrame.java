@@ -1498,6 +1498,14 @@ public class AirportFrame extends javax.swing.JFrame {
         mainTabbedPane.setEnabledAt(5, false);
         mainTabbedPane.setEnabledAt(6, false);
         mainTabbedPane.setEnabledAt(7, false);
+        
+        if(!adminButtonA.isSelected() && !userButtonA.isSelected()){
+            for (int i = 0; i < mainTabbedPane.getTabCount(); i++) {
+                mainTabbedPane.setEnabledAt(i, false);
+            }
+            mainTabbedPane.setEnabledAt(9, true);
+            mainTabbedPane.setEnabledAt(11, true);
+        }
     }//GEN-LAST:event_adminButtonAActionPerformed
 
     private void userButtonAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userButtonAActionPerformed
@@ -1514,6 +1522,14 @@ public class AirportFrame extends javax.swing.JFrame {
         mainTabbedPane.setEnabledAt(6, true);
         mainTabbedPane.setEnabledAt(7, true);
         mainTabbedPane.setEnabledAt(11, true);
+        
+        if(!adminButtonA.isSelected() && !userButtonA.isSelected()){
+            for (int i = 0; i < mainTabbedPane.getTabCount(); i++) {
+                mainTabbedPane.setEnabledAt(i, false);
+            }
+            mainTabbedPane.setEnabledAt(9, true);
+            mainTabbedPane.setEnabledAt(11, true);
+        }
     }//GEN-LAST:event_userButtonAActionPerformed
 
     private void registerButtonPRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerButtonPRActionPerformed

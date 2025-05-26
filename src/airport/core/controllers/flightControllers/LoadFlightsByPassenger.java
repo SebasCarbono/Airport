@@ -48,6 +48,10 @@ public class LoadFlightsByPassenger {
             
             passengerFlights = passenger.getFlights();
             
+            if (passengerFlights.isEmpty()){
+                return new Response("The passenger has no flights", Status.NOT_FOUND);
+            }
+            
             return new Response("Flights for passenger loaded", Status.OK, passengerFlights);
         } catch (Exception ex) {
             return new Response("Error loading passenger flights", Status.INTERNAL_SERVER_ERROR);

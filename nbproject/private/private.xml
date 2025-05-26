@@ -2,6 +2,17 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+<<<<<<< HEAD
         <group/>
+=======
+        <group>
+            <file>file:/C:/Users/Karoll/Documents/Airport/src/airport/core/views/AirportFrame.java</file>
+            <file>file:/C:/Users/Karoll/Documents/Airport/src/airport/main/Main.java</file>
+            <file>file:/C:/Users/Karoll/Documents/Airport/src/airport/core/controllers/flightControllers/LoadFlightData.java</file>
+            <file>file:/C:/Users/Karoll/Documents/Airport/src/airport/core/models/storage/FlightStorage.java</file>
+            <file>file:/C:/Users/Karoll/Documents/Airport/src/airport/core/models/storage/LocationStorage.java</file>
+            <file>file:/C:/Users/Karoll/Documents/Airport/src/airport/core/models/jsonLoaders/JsonFlightLoader.java</file>
+        </group>
+>>>>>>> 75fe0deb4bc1e1e858453b9a018357e74b085c55
     </open-files>
 </project-private>
